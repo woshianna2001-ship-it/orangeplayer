@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="30dp"
+    android:layout_height="30dp"
+    android:padding="4dp">
+    
+    <!-- 颜色圆圈 -->
+    <View
+        android:id="@+id/color_circle"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/color_circle_bg"/>
+        
+    <!-- 选中状态图标 -->
+    <ImageView
+        android:id="@+id/check_icon"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_gravity="center"
+        android:src="@drawable/ic_check"
+        android:visibility="invisible"/>
+</FrameLayout>

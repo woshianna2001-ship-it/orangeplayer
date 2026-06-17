@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">OrangePlayer TV</string>
+    
+    <!-- 播放器控制 -->
+    <string name="play_pause">播放/暂停</string>
+    <string name="rewind">快退</string>
+    <string name="forward">快进</string>
+    
+    <!-- 提示信息 -->
+    <string name="loading">加载中...</string>
+    <string name="error_playback">播放出错</string>
+    <string name="error_no_url">视频地址为空</string>
+</resources>

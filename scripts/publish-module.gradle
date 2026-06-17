@@ -1,0 +1,158 @@
+// Module publishing configuration
+// Include in module's build.gradle: apply from: "${rootDir}/scripts/publish-module.gradle"
+
+apply plugin: 'maven-publish'
+apply plugin: 'signing'
+import org.gradle.api.artifacts.ProjectDependency
+
+task androidSourcesJar(type: Jar) {
+    archiveClassifier.set('sources')
+    if (project.plugins.findPlugin("com.android.library")) {
+        from android.sourceSets.main.java.srcDirs
+        from android.sourceSets.main.kotlin.srcDirs
+    } else {
+        from sourceSets.main.java.srcDirs
+        from sourceSets.main.kotlin.srcDirs
+    }
+}
+
+task androidJavadocsJar(type: Jar) {
+    archiveClassifier.set('javadoc')
+    // Android libraries typically don't generate Javadoc, use empty jar
+}
+
+artifacts {
+    archives androidSourcesJar
+    archives androidJavadocsJar
+}
+
+group = PUBLISH_GROUP_ID
+version = PUBLISH_VERSION
+
+afterEvaluate {
+    publishing {
+        repositories {
+            maven {
+                name = 'local'
+                url = layout.buildDirectory.dir('repo')
+            }
+            maven {
+                name = 'sonatype'
+                def releasesRepoUrl = 'https://ossrh-staging-api.central.sonatype.com/service/local/staging/deploy/maven2/'
+                def snapshotsRepoUrl = 'https://ossrh-staging-api.central.sonatype.com/content/repositories/snapshots/'
+                url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+                credentials {
+                    username = project.findProperty('ossrhUsername') ?: System.getenv('OSSRH_USERNAME')
+                    password = project.findProperty('ossrhPassword') ?: System.getenv('OSSRH_PASSWORD')
+                }
+            }
+        }
+        publications {
+            release(MavenPublication) {
+                def isAndroidLibrary = project.plugins.findPlugin("com.android.library") != null
+                if (isAndroidLibrary) {
+                    artifact(file("$buildDir/outputs/aar/${project.name}-release.aar")) {
+                        builtBy(tasks.named("bundleReleaseAar"))
+                    }
+                } else {
+                    from components.java
+                }
+
+                // Maven coordinates
+                groupId PUBLISH_GROUP_ID
+                artifactId PUBLISH_ARTIFACT_ID
+                version PUBLISH_VERSION
+
+                // Attach sources and documentation
+                artifact androidSourcesJar
+                artifact androidJavadocsJar
+
+                // POM configuration
+                pom {
+                    if (isAndroidLibrary) {
+                        packaging = 'aar'
+                    }
+                    name = 'OrangePlayer'
+                    description = 'Enhanced Android video player library based on GSYVideoPlayer, supports multiple player engines, subtitles, danmaku, OCR recognition, speech recognition and more'
+                    url = 'https://github.com/706412584/orangeplayer'
+                    
+                    licenses {
+                        license {
+                            name = 'The Apache License, Version 2.0'
+                            url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        }
+                    }
+                    
+                    developers {
+                        developer {
+                            id = '706412584'
+                            name = 'Orange Developer'
+                            email = '706412584@qq.com'
+                        }
+                    }
+                    
+                    scm {
+                        connection = 'scm:git:git://github.com/706412584/orangeplayer.git'
+                        developerConnection = 'scm:git:ssh://github.com/706412584/orangeplayer.git'
+                        url = 'https://github.com/706412584/orangeplayer'
+                    }
+                    if (isAndroidLibrary) {
+                        withXml {
+                            def dependenciesNode = asNode().appendNode('dependencies')
+                            def seen = new LinkedHashSet<String>()
+
+                            def appendDependency = { dep, scope ->
+                                if (dep == null) {
+                                    return
+                                }
+                                String groupIdValue
+                                String artifactIdValue
+                                String versionValue
+                                if (dep instanceof ProjectDependency) {
+                                    groupIdValue = PUBLISH_GROUP_ID
+                                    artifactIdValue = dep.name
+                                    versionValue = PUBLISH_VERSION
+                                } else {
+                                    if (dep.group == null || dep.name == null || dep.version == null) {
+                                        return
+                                    }
+                                    groupIdValue = dep.group
+                                    artifactIdValue = dep.name
+                                    versionValue = dep.version
+                                }
+                                def key = "${groupIdValue}:${artifactIdValue}:${versionValue}:${scope}"
+                                if (!seen.add(key)) {
+                                    return
+                                }
+                                def dependencyNode = dependenciesNode.appendNode('dependency')
+                                dependencyNode.appendNode('groupId', groupIdValue)
+                                dependencyNode.appendNode('artifactId', artifactIdValue)
+                                dependencyNode.appendNode('version', versionValue)
+                                dependencyNode.appendNode('scope', scope)
+                            }
+
+                            configurations.api.allDependencies.each { dep ->
+                                appendDependency(dep, 'compile')
+                            }
+                            configurations.implementation.allDependencies.each { dep ->
+                                appendDependency(dep, 'runtime')
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+// 签名配置
+signing {
+    // 从 gradle.properties 或环境变量读取签名信息
+    def signingKey = project.findProperty("signing.keyId") ?: System.getenv("SIGNING_KEY_ID")
+    def signingPassword = project.findProperty("signing.password") ?: System.getenv("SIGNING_PASSWORD")
+    def signingSecretKey = project.findProperty("signing.secretKeyRingFile") ?: System.getenv("SIGNING_SECRET_KEY_RING_FILE")
+    
+    if (signingKey && signingPassword && signingSecretKey) {
+        sign publishing.publications
+    }
+}

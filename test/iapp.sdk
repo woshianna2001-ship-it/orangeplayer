@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?><iapp>
+<sdklist><sdk aar="true" time="1773997520817" maven="" more="">io.github.706412584:gsyVideoPlayer-java:1.2.7</sdk><sdk aar="true" time="1773994990608" maven="" more="">io.github.706412584:orangeplayer:1.2.7</sdk><sdk aar="true" time="1773994984778" maven="" more="">io.github.706412584:gsyVideoPlayer-ex_so:1.2.7</sdk><sdk md5="cd5cb9e3cffa7d45ce0ba2c4f6d7f928" time="1773991282049" more="iapp依赖">iapp_luxuryLib.ilib</sdk>
+<!-- OrangePlayer 核心库 -->
+
+
+<!-- GSYVideoPlayer 内核 - IJK播放器 -->
+
+
+<!-- GSYVideoPlayer 全架构so库（包含armv7a/armv64/x86/x86_64，支持加密视频） -->
+
+<!-- 弹幕库 -->
+<sdk aar="true" time="1750959274645" maven="" more="">com.github.bilibili:DanmakuFlameMaster:0.9.25</sdk>
+
+<!-- Glide 图片加载 -->
+<sdk aar="true" time="1744044796851" more="图片工具库">com.github.bumptech.glide:glide:4.13.2</sdk>
+<sdk aar="true" time="1744044628815" more="">com.github.bumptech.glide:compiler:4.13.2</sdk>
+<sdk aar="true" time="1744044814677" more="glide依赖">androidx.exifinterface:exifinterface:1.2.0</sdk>
+
+<!-- DLNA投屏 -->
+<sdk md5="0cd780f6f2d1d409b9c201226a93da71">UaoanDLNA-1.0.1.aar</sdk>
+
+<!-- Kotlin支持 -->
+<sdk md5="3940899ff127226eff5eb8a88e79a606">kotlin-stdlib-1.7.10.jar</sdk>
+
+<!-- OkHttp网络库 -->
+<sdk md5="484052430cd3ca3bed3e41fe1d9081f9">okhttp-4.9.2.jar</sdk>
+<sdk md5="48756cee44c4f8403ebd07a8152ea5ba">okio-2.8.0.jar</sdk>
+
+<!-- 日志 -->
+<sdk md5="70e6cc9b967a81d104b3919d98534eff">slf4j-android-1.7.21.jar</sdk>
+<sdk md5="c9be56284a92dcb2576679282eff80bf">slf4j-api-1.7.21.jar</sdk>
+</sdklist>
+<relySdklist>
+
+<sdk aar="true" select="true" time="1773997564995" more="系统添加的依赖库" parent="系统添加">com.github.bilibili.DanmakuFlameMaster:DanmakuFlameMaster:0.9.25</sdk>
+
+<sdk aar="true" select="true" time="1773997564995" more="系统添加的依赖库" parent="系统添加">com.github.bilibili.DanmakuFlameMaster:ndkbitmap-armv5:0.9.25</sdk>
+
+<sdk aar="true" select="true" time="1773997564995" more="系统添加的依赖库" parent="系统添加">com.github.bilibili.DanmakuFlameMaster:ndkbitmap-armv7a:0.9.25</sdk>
+
+<sdk aar="true" select="true" time="1773997564995" more="系统添加的依赖库" parent="系统添加">com.github.bilibili.DanmakuFlameMaster:ndkbitmap-x86:0.9.25</sdk>
+
+<sdk aar="true" select="true" time="1773997564995" more="系统添加的依赖库" parent="系统添加">io.github.706412584:gsyVideoPlayer-base:1.2.7</sdk>
+
+<sdk aar="true" select="true" time="1773997564995" more="系统添加的依赖库" parent="系统添加">io.github.706412584:gsyVideoPlayer-proxy_cache:1.2.7</sdk>
+
+<sdk aar="true" select="true" time="1773997564995" more="系统添加的依赖库" parent="系统添加">io.github.carguo:gsyijkjava:1.0.0</sdk>
+
+</relySdklist></iapp>

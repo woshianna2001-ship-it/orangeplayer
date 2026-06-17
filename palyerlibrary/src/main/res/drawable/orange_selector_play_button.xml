@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 播放/暂停按钮选择器 -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 播放中显示暂停图标 -->
+    <item android:drawable="@drawable/ic_pause" android:state_selected="true"/>
+    <!-- 暂停时显示播放图标 -->
+    <item android:drawable="@drawable/ic_play"/>
+</selector>

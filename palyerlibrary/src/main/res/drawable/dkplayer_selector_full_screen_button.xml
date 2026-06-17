@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 全屏按钮选择器 -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 全屏时显示退出全屏图标 -->
+    <item android:drawable="@drawable/ic_fullscreen_exit" android:state_selected="true"/>
+    <!-- 非全屏时显示全屏图标 -->
+    <item android:drawable="@drawable/ic_fullscreen"/>
+</selector>

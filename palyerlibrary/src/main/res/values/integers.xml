@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- VodControlView integers -->
+    <integer name="orange_seekbar_max">1000</integer>
+</resources>

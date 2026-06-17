@@ -1,0 +1,73 @@
+apply plugin: "maven-publish"
+apply plugin: "signing"
+
+android {
+    publishing {
+        singleVariant('release') {
+            withSourcesJar()
+            withJavadocJar()
+        }
+    }
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                // 只有在 release 组件存在时才使用
+                if (components.findByName('release')) {
+                    from components.release
+                }
+
+                // 使用默认值，避免本地编译时出错
+                group = project.hasProperty('PROJ_GROUP') ? PROJ_GROUP : 'com.shuyu.gsyvideoplayer'
+                artifactId = project.hasProperty('PROJ_ARTIFACTID') ? PROJ_ARTIFACTID : project.name
+                version = project.hasProperty('PROJ_VERSION') ? PROJ_VERSION : '1.0.0'
+
+                pom {
+                    name = project.hasProperty('PROJ_NAME') ? PROJ_NAME : project.name
+                    description = project.hasProperty('PROJ_DESCRIPTION') ? PROJ_DESCRIPTION : 'GSYVideoPlayer module'
+                    url = project.hasProperty('PROJ_VCSURL') ? PROJ_VCSURL : 'https://github.com/CarGuo/GSYVideoPlayer'
+                    licenses {
+                        license {
+                            name = "The Apache License, Version 2.0"
+                            url = "https://www.apache.org/licenses/LICENSE-2.0.txt"
+                        }
+                    }
+                    developers {
+                        developer {
+                            id = project.hasProperty('DEVELOPER_ID') ? DEVELOPER_ID : 'CarGuo'
+                            name = project.hasProperty('DEVELOPER_NAME') ? DEVELOPER_NAME : 'CarGuo'
+                        }
+                    }
+                    scm {
+                        connection = project.hasProperty('PROJ_ISSUETRACKERURL') ? PROJ_ISSUETRACKERURL : 'https://github.com/CarGuo/GSYVideoPlayer/issues'
+                        developerConnection = project.hasProperty('PROJ_VCSURL') ? PROJ_VCSURL : 'https://github.com/CarGuo/GSYVideoPlayer'
+                        url = project.hasProperty('PROJ_WEBSITEURL') ? PROJ_WEBSITEURL : 'https://github.com/CarGuo/GSYVideoPlayer'
+                    }
+                }
+            }
+        }
+        
+        repositories {
+            maven {
+                name = "LocalRepository"
+                url = uri("${project.buildDir}/repo")
+            }
+        }
+    }
+    
+    // 配置签名
+    signing {
+        def signingKeyId = rootProject.findProperty('signing.keyId') ?: ''
+        def signingPassword = rootProject.findProperty('signing.password') ?: ''
+        def signingSecretKeyRingFile = rootProject.findProperty('signing.secretKeyRingFile') ?: ''
+        
+        if (signingKeyId && signingPassword && signingSecretKeyRingFile) {
+            required = true
+            sign publishing.publications.release
+        } else {
+            required = false
+        }
+    }
+}

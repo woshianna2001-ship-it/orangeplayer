@@ -1,0 +1,13 @@
+// Maven Central publishing configuration
+// Reference: https://central.sonatype.com/
+
+ext {
+    // Read from gradle.properties or environment variables
+    PUBLISH_GROUP_ID = 'io.github.706412584'
+    PUBLISH_VERSION = '1.1.1'  // Updated to latest version
+    PUBLISH_ARTIFACT_ID = 'orangeplayer'
+}
+
+// Note: New Sonatype Central uses different publishing method
+// Currently using traditional maven-publish plugin for direct publishing
+// If you need to use Nexus Publishing Plugin, configure OSSRH account

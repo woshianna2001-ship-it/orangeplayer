@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    
+    <!-- 加载提示 -->
+    <ProgressBar
+        android:id="@+id/tv_loading"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_centerInParent="true"
+        android:visibility="gone" />
+    
+    <!-- 控制栏（底部） -->
+    <LinearLayout
+        android:id="@+id/tv_control_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical"
+        android:padding="48dp"
+        android:background="@drawable/dkplayer_shape_stardard_controller_bottom_bg">
+        
+        <!-- 标题 -->
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="32sp"
+            android:textColor="#FFFFFF"
+            android:layout_marginBottom="24dp"
+            android:text="视频标题" />
+        
+        <!-- 进度条 -->
+        <SeekBar
+            android:id="@+id/tv_seek_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusable="true"
+            android:focusableInTouchMode="false"
+            android:layout_marginBottom="24dp"
+            android:minHeight="8dp"
+            android:progressDrawable="@drawable/seekbar_style"
+            android:thumb="@drawable/thumb_selecter" />
+        
+        <!-- 时间信息 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="24dp">
+            
+            <TextView
+                android:id="@+id/tv_current_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="24sp"
+                android:textColor="#CCCCCC"
+                android:text="00:00" />
+            
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textSize="24sp"
+                android:textColor="#CCCCCC"
+                android:text=" / " />
+            
+            <TextView
+                android:id="@+id/tv_duration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="24sp"
+                android:textColor="#CCCCCC"
+                android:text="00:00" />
+        </LinearLayout>
+        
+        <!-- 控制按钮 -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:orientation="horizontal">
+            
+            <!-- 快退按钮 -->
+            <ImageButton
+                android:id="@+id/tv_btn_rewind"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_margin="16dp"
+                android:focusable="true"
+                android:focusableInTouchMode="false"
+                android:background="@drawable/dkplayer_shape_play_bg"
+                android:src="@drawable/dkplayer_ic_action_fast_rewind"
+                android:contentDescription="快退" />
+            
+            <!-- 播放/暂停按钮 -->
+            <ImageButton
+                android:id="@+id/tv_btn_play_pause"
+                android:layout_width="96dp"
+                android:layout_height="96dp"
+                android:layout_margin="16dp"
+                android:focusable="true"
+                android:focusableInTouchMode="false"
+                android:background="@drawable/dkplayer_shape_play_bg"
+                android:src="@drawable/dkplayer_ic_action_play_arrow"
+                android:contentDescription="播放/暂停" />
+            
+            <!-- 快进按钮 -->
+            <ImageButton
+                android:id="@+id/tv_btn_forward"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_margin="16dp"
+                android:focusable="true"
+                android:focusableInTouchMode="false"
+                android:background="@drawable/dkplayer_shape_play_bg"
+                android:src="@drawable/dkplayer_ic_action_fast_forward"
+                android:contentDescription="快进" />
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>

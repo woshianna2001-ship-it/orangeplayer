@@ -1,0 +1,320 @@
+<View id="1" did="0" type="LinearLayout">
+<ppt>width=-1
+height=42dp
+orientation=vertical
+backgroundcolor=#50c4e5
+gravity=center_vertical</ppt>
+<event><eventItme type="clicki">cls("com.orange.player.VideoPlayerManager",Playmanager)
+
+javax(视频管理器,null,Playmanager,"getInstance")
+
+//暂停播放器
+javax(null,视频管理器,Playmanager,"onVideoResume")
+
+syso("播放")</eventItme></event>
+</View>
+<View id="2" did="1" type="TextView">
+<ppt>width=-2
+height=-2
+text=橘子播放器v3
+textsize=16sp
+textcolor=#ffffff
+layout_marginleft=10dp</ppt>
+<event></event>
+</View>
+<View id="4" did="0" type="RelativeLayout">
+<ppt>width=-1
+height=180dp
+ps=播放器容器
+background=through</ppt>
+<event></event>
+</View>
+<View id="5" did="0" type="TextView">
+<ppt>width=-1
+padding=5dp
+layout_margin=5dp
+height=-2
+text=Orange播放器plusv1.7_完美继承DK播放器vison.3.3.7\n1.新增选集界面\n2.优化弹窗沉浸，点击不显示底部导航栏\n3.设置新增保存视频功能，可触发下载事件\n4.设置支持阿里云,ijk内核,exo内核,android系统内核切换\n5.支持视频TCP网速加载显示0KB/s\n6.设置支持剧集顺序播放设置\n7.0.35x-10.0x无级变速播放\n8.新增下一集按钮\n9.新增投屏功能\n10.新增拖动进度小窗预览窗口\n11.支持播放顺序切换\n12.新增下一集按钮实现！\n13.新增实时弹幕，自定义弹幕，批量时间段弹幕\n14.新增视频嗅探播放功能\n15.新增视频第一帧缩略图显示(不支持m3u8格式)\n16.新增支持28种内置加载动画切换\n更新时间2025-8-21</ppt>
+<event></event>
+</View>
+<View id="6" did="0" type="ScrollView">
+<ppt>width=-1
+height=-2</ppt>
+<event></event>
+</View>
+<View id="7" did="6" type="LinearLayout">
+<ppt>width=-1
+height=-2
+orientation=horizontal
+gravity=center_vertical</ppt>
+<event></event>
+</View>
+<View id="8" did="7" type="EditText">
+<ppt>width=0dp
+height=65dp
+text=http://player.alicdn.com/video/aliyunmedia.mp4
+hint=输入视频链接http/https
+layout_weight=1</ppt>
+<event></event>
+</View>
+<View id="9" did="7" type="Button">
+<ppt>width=-2
+height=-2
+text=播放</ppt>
+<event><eventItme type="clicki">ug(8,"text",url)
+
+f(url==""||url==null||url=="null")
+{
+	tw("播放地址不可为空")
+}
+
+cls("com.orange.player.VideoPlayerManager",Playmanager)
+
+javax(视频管理器,null,Playmanager,"getInstance")
+
+javax(null,视频管理器,Playmanager,"selectEngine","String","default")
+
+javax(null,视频管理器,Playmanager,"stop")
+
+javax(null,视频管理器,Playmanager,"setVideoSource","String",url,"String","未知视频")
+
+javax(null,视频管理器,Playmanager,"start")
+
+
+</eventItme></event>
+</View>
+<View id="10" did="7" type="Button">
+<ppt>width=-2
+height=-2
+text=嗅探播放</ppt>
+<event><eventItme type="clicki">ug(8,"text",url)
+
+f(url==""||url==null||url=="null")
+{
+	tw("播放地址不可为空")
+}
+
+cls("com.orange.player.VideoPlayerManager",Playmanager)
+
+javax(视频管理器,null,Playmanager,"getInstance")
+
+javax(null,视频管理器,Playmanager,"stop")
+javax(null,视频管理器,Playmanager,"setVideoSource","String",url,"String","未知视频")
+//开始播放
+javax(null,视频管理器,Playmanager,"startSniffing")</eventItme></event>
+</View>
+<UIEventset><eventItme type="loading">//注意，v3编辑权限配置，更多权限配置打开后才能正常编译，正式打包后才有效果。在线运行不支持。因为需要编译sdk/如果觉得包体太大，去掉xyz.doikki.android.dkplayer:player-ijk:3.3.7依赖后大概10M左右的大小，去掉阿里内com.aliyun.sdk.android:AliyunPlayer:5.4.7.1-full后大概5-6M大小，只保留系统内核。
+//QQ706412584，原创禁止共享空间倒卖
+
+/.activity的标签需要设置&lt;activity android:name="填你的activity名字，具体参考本demo" android:exported="true" android:screenOrientation="portrait" android:supportsPictureInPicture="true" android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation" android:resizeableActivity="true"&gt;
+否则无法开启全屏个画中画
+./
+
+
+tw("yyds666")
+
+cls("com.orange.player.VideoPlayerManager",Playmanager)
+
+cls("com.orange.playerlibrary.OrangeVideoController",Controller)
+
+s videourl="http://player.alicdn.com/video/aliyunmedia.mp4"
+
+s videourl2="https://v.cdnlz22.com/20240815/3725_2916c479/index.m3u8"
+
+gvs(4,playui)
+
+javax(视频管理器,null,Playmanager,"getInstance")
+
+
+//初始化播放器
+javax(null,视频管理器,Playmanager,"init","android.app.Activity",activity,"android.view.ViewGroup",playui)
+//设置加载动画 1-28，默认22
+javax(null,视频管理器,Playmanager,"setLoading","int",22)
+
+//设置数据源，标题可为空""
+javax(null,视频管理器,Playmanager,"setVideoSource","String",videourl2,"String","剑来-第一集")
+//开始播放
+javax(null,视频管理器,Playmanager,"selectEngine","String","ali")
+
+//javax(null,视频管理器,Playmanager,"start")
+//开启投屏（新版SDK需要用户自行实现投屏功能）
+//javax(null,视频管理器,Playmanager,"openScreenTv")
+//开启竖屏模式（新版SDK自动根据视频比例选择全屏模式）
+//javax(null,视频管理器,Playmanager,"setFullScreenVertical","boolean",true)
+//显示下一集（新版SDK通过VideoList自动管理选集按钮）
+//javax(null,视频管理器,Playmanager,"setPlayNextVisibility","boolean",true)
+
+
+//显示下一集
+//批量添加选集
+s arrayJson = "[{\"name\":\"第一集\",\"url\":\"http://mrapvdcf.tds1.tapfiles.cn/iFM1rSLePoVaqdCwxZEgtBoiV4UAYMBp/%E6%8A%96%E9%9F%B3%E6%97%A0%E6%B0%B4%E5%8D%B0%E8%A7%86%E9%A2%91%E5%9C%A8%E7%BA%BF%E4%B8%8B%E8%BD%BD%EF%BC%8C%E6%8A%96%E9%9F%B3%E6%97%A0%E6%B0%B4%E5%8D%B0%E8%A7%86%E9%A2%91%E5%9C%A8%E7%BA%BF%E8%A7%A3%E6%9E%90.mp4\",\"isSpecial\":false},{\"name\":\"CCTV6\",\"url\":\"http://39.134.66.108/wh7f454c46tw2990301684_1341702008/ottrrs.hl.chinamobile.com/TVOD/88888888/224/3221226010/index.m3u8?icpid=88888888&RTS=1750674609&from=4&hms_devid=992&vqe=3\",\"isSpecial\":true}]"
+
+//传入jsonArry字符串String或者jsonArry对象.JsonArray
+//javax(null,视频管理器,Playmanager,"addVideosFromJsonArray","String",arrayJson)
+
+//添加单个选集，是否独立视频，不是则会显示主标题-集数
+//javax(null,视频管理器,Playmanager,"addVideo","String","测试标题","String","视频地址","boolean",false)
+
+
+
+
+// 包含颜色字符串的JSON示例
+s danmakuJson = "[{\"text\":\"测试弹幕1：开始播放啦～\",\"color\":\"#ffffff\",\"timestamp\":0,\"isSelf\":false},{\"text\":\"密集弹幕测试开始！\",\"color\":\"#ff0000\",\"timestamp\":0,\"isSelf\":true},{\"text\":\"中间点弹幕\",\"color\":\"#ffff00\",\"timestamp\":200000,\"isSelf\":true}]"
+
+//传入jsonArry字符串String或者jsonArry对象.JsonArray
+//javax(null,视频管理器,Playmanager,"setDanmuListFromJson","String",danmakuJson)
+
+cls("com.orange.playerlibrary.OrangeVideoController$DebugLogger",DebugLogger)
+javacb(hd,DebugLogger)
+{
+	f(st_mD?"log")
+	{
+		sgsz(st_aS,0,tag)
+		sgsz(st_aS,1,msg)
+		syso(tag+":"+msg)
+	}
+	
+}
+
+javax(null,null,Controller,"setDebugLogger",DebugLogger,hd)
+
+//开启日志
+javax(null,null,Controller,"setdebug","boolean",true)
+
+
+
+//批量设置弹幕
+t()
+{
+	
+	syso("准备加载弹幕")
+	
+	javax(视频管理器,null,Playmanager,"getInstance")
+	fr("@danmu.json",danmu)
+	json(danmu,dajs)
+	json(dajs,"get","danum",弹幕数量)
+	javax(null,视频管理器,Playmanager,"sendDanmu","String","共有"+弹幕数量+" 条弹幕，正在赶来的路上！","String","#ffe5a845","boolean",false)
+	json(dajs,"list","danmuku",弹幕列表)
+	json(弹幕列表,"size",size)
+	json("[]",zhdatas)
+	s czsj=0
+	w(size&gt;0)
+	{
+		s-(1,size)
+		json("{}",items)
+		json(弹幕列表,"get",size,data)
+		json(data,"get",0,times)
+		json(data,"get",2,colors)
+		json(data,"get",4,danumnr)
+		json(items,"set","timestamp",times*1000)
+		json(items,"set","text",danumnr)
+		json(items,"set","isSelf",false)
+		json(items,"set","color",colors)
+		json(zhdatas,"set",czsj,items)
+		s+(1,czsj)
+	}
+	
+	json(zhdatas,"size",gxsize)
+	
+	f(gxsize&gt;0)
+	{
+		
+		javax(code,视频管理器,Playmanager,"setDanmuListFromJson","org.json.JSONArray",zhdatas)
+		
+		//传入完毕
+		
+		syso("传入弹幕"+code)
+		
+	}else
+	{
+		syso("弹幕数量0")
+	}
+	
+}
+//批量设置选集
+t()
+{
+	syso("准备选集")
+	
+	javax(视频管理器,null,Playmanager,"getInstance")
+	fr("@item.json",xjdata)
+	json(xjdata,dajs)
+	json(dajs,"list","list",选集列表)
+	json(选集列表,"data",0,xjlist)
+	json(xjlist,"get","vod_play_url",播放源)
+	sj(播放源,"$$$",null,选集)
+	sl(选集,"#",xjsz)
+	json("[]",zhdata)
+	s czsj=0
+	for(lb;xjsz)
+	{
+		sl(lb,"$",选集数据)
+		sgsz(选集数据,0,标题)
+		sgsz(选集数据,1,播放地址)
+		f(标题==null||标题==""||标题=="null")
+		{
+			endcode
+		}
+		json("{}",items)
+		json(items,"set","name",标题)
+		json(items,"set","url",播放地址)
+		json(items,"set","isSpecial",false)
+		json(zhdata,"set",czsj,items)
+		s+(1,czsj)
+	}
+	
+	json(zhdata,"size",gxsize)
+	
+	f(gxsize&gt;0)
+	{
+		
+		javax(null,视频管理器,Playmanager,"addVideosFromJsonArray","org.json.JSONArray",zhdata)
+		//传入完毕
+		
+		syso("传入选集")
+		
+	}else
+	{
+		syso("选集数量0")
+	}
+	
+}</eventItme><eventItme type="destroy">cls("com.orange.player.VideoPlayerManager",Playmanager)
+
+javax(视频管理器,null,Playmanager,"getInstance")
+
+//销毁播放器
+javax(null,视频管理器,Playmanager,"release")
+
+syso("销毁播放器")
+ </eventItme><eventItme type="stop">cls("com.orange.player.VideoPlayerManager",Playmanager)
+
+javax(视频管理器,null,Playmanager,"getInstance")
+
+//暂停播放器
+javax(null,视频管理器,Playmanager,"onPause")
+</eventItme><eventItme type="restart">cls("com.orange.player.VideoPlayerManager",Playmanager)
+
+javax(视频管理器,null,Playmanager,"getInstance")
+
+//暂停播放器
+javax(null,视频管理器,Playmanager,"onVideoResume")</eventItme><eventItme type="downkey">f(st_kC==4)
+{
+	
+    cls("com.orange.player.VideoPlayerManager",Playmanager)
+    
+    cls("com.orange.playerlibrary.OrangevideoView",videoView)
+    
+    javax(视频管理器,null,Playmanager,"getInstance")
+    
+    javax(isfull,视频管理器,Playmanager,"isFullScreen")
+    
+    f(isfull==true)
+    {
+    	javax(null,视频管理器,Playmanager,"toggleFullScreen")
+    	//退出全屏
+    }else
+    {
+    	end()
+    	//退出软件
+    }
+}</eventItme></UIEventset>

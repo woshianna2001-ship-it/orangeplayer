@@ -1,0 +1,89 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'com.orange.player.tv'
+    compileSdk 36
+
+    defaultConfig {
+        applicationId "com.orange.player.tv"
+        minSdk 23  // Media3 需要 API 23+
+        targetSdk 36
+        versionCode 1
+        versionName "1.0-tv"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        
+        // 编译全架构（支持所有设备）
+        ndk {
+            abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
+        }
+    }
+    
+    signingConfigs {
+        release {
+            // 如果有签名文件，取消注释以下配置
+            // storeFile file('smlieapp.jks')
+            // storePassword '123123'
+            // keyAlias 'smlieapp'
+            // keyPassword '123123'
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            shrinkResources true
+            // signingConfig signingConfigs.release
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            minifyEnabled false
+            shrinkResources false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+}
+
+dependencies {
+    // AndroidX 基础库
+    implementation 'androidx.appcompat:appcompat:1.7.1'
+    implementation 'com.google.android.material:material:1.13.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.2.1'
+    
+    // Android TV Leanback 库
+    implementation 'androidx.leanback:leanback:1.2.0-alpha04'
+    implementation 'androidx.tvprovider:tvprovider:1.0.0'
+    
+    // 自定义播放器模块
+    implementation project(':palyerlibrary')
+    
+    // 播放器内核 - 使用本地 GSYVideoPlayer 模块
+    implementation project(':gsyVideoPlayer-java')
+    
+    // Native so 文件（按需选择架构）
+    implementation project(':gsyVideoPlayer-armv7a')
+    implementation project(':gsyVideoPlayer-armv64')
+    implementation project(':gsyVideoPlayer-x86')
+    implementation project(':gsyVideoPlayer-x86_64')
+    
+    // ExoPlayer 内核（推荐用于 TV）
+    implementation project(':gsyVideoPlayer-exo_player2')
+    
+    // 必需依赖
+    implementation 'com.github.bumptech.glide:glide:4.16.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.16.0'
+    
+    // 可选功能
+    implementation 'com.github.bilibili:DanmakuFlameMaster:0.9.25'  // 弹幕
+    
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.3.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.7.0'
+}

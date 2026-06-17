@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 普通状态滑块：白色圆形带阴影 -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 阴影层 -->
+    <item android:bottom="1dp" android:left="1dp" android:right="1dp" android:top="1dp">
+        <shape android:shape="oval">
+            <solid android:color="#40000000"/>
+            <size android:width="10dp" android:height="10dp"/>
+        </shape>
+    </item>
+    <!-- 主体 -->
+    <item>
+        <shape android:shape="oval">
+            <solid android:color="#FFFFFF"/>
+            <size android:width="8dp" android:height="8dp"/>
+        </shape>
+    </item>
+</layer-list>

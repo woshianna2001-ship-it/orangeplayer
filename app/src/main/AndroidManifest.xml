@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:tools="http://schemas.android.com/tools">
+	
+	<!-- 允许使用 minSdk 24 的投屏库 -->
+	<uses-sdk tools:overrideLibrary="com.uaoanlao.tv" />
+	
+	<!-- 网络权限 -->
+	<uses-permission android:name="android.permission.INTERNET" />
+	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+	<!-- 防止系统在磁力链接获取元数据时杀死进程 -->
+	<uses-permission android:name="android.permission.WAKE_LOCK" />
+	<!-- 投屏需要的 WiFi 权限 -->
+	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+	<uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
+	<!-- 注意：AudioPlaybackCapture 不需要麦克风权限，只需要 MediaProjection 权限（屏幕录制） -->
+	<!-- 下载功能需要的权限 -->
+	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+	<uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+	<uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+	<uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+	
+	<!-- 允许 HTTP 明文流量 -->
+	<application
+			android:name=".OrangeApplication"
+			android:allowBackup="true"
+			android:dataExtractionRules="@xml/data_extraction_rules"
+			android:fullBackupContent="@xml/backup_rules"
+			android:icon="@mipmap/ic_launcher"
+			android:label="@string/app_name"
+			android:roundIcon="@mipmap/ic_launcher_round"
+			android:supportsRtl="true"
+			android:usesCleartextTraffic="true"
+			android:theme="@style/Theme.橘子播放器">
+		<activity
+				android:name=".MainActivity"
+				android:exported="true"
+				android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation|keyboardHidden"
+				android:screenOrientation="portrait"
+				android:supportsPictureInPicture="true"
+				android:resizeableActivity="true">
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN"/>
+				
+				<category android:name="android.intent.category.LAUNCHER"/>
+			</intent-filter>
+		</activity>
+		
+		<!-- 测试 Activity - 用于测试播放器生命周期 -->
+		<activity
+				android:name=".TestActivity"
+				android:exported="false"
+				android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation|keyboardHidden"
+				android:screenOrientation="portrait"
+				android:supportsPictureInPicture="true"
+				android:resizeableActivity="true" />
+		
+		<meta-data
+				android:name="orange.downloader.ffmpeg.merge.enabled"
+				android:value="true" />
+		<meta-data
+				android:name="orange.downloader.ffmpeg.merge.java_fallback.enabled"
+				android:value="true" />
+
+		<!-- 下载服务已在 orange-downloader 模块中声明 -->
+	</application>
+
+
+</manifest>

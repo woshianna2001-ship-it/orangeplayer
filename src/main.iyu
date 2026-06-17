@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?><LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/main_v" android:orientation="vertical" android:layout_width="match_parent" android:layout_height="match_parent" android:gravity="center">
+    <_Yu5Src><onCreate><onCreate>//载入事件内会加载布局，不使用该事件则不加载布局
+
+java {
+  //下载完成点击
+  VideoDownloadListAdapter.setDownloadCallback(new VideoDownloadListAdapter.DownItem(){
+    @Override
+    public void onclick(String nr) {
+      gj.ts(nr);
+      wj.dk(nr);
+    }
+  });
+}
+//QQ 1823565614 七桐
+//QQ 1823565614 七桐
+//QQ交流群598138277
+/*
+github地址 https://github.com/JeffMony/VideoDownloader.git
+更多方法自行去github查看
+移植到项目请注意看清单文件的代码
+*/
+</onCreate></onCreate></_Yu5Src><Button android:id="@+id/an1" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="下载"><Yu5Src><setOnClickListener><onClick>java {
+  VideoDownloadListActivity.addVideoTaskIte("https://baidu.sd-play.com/20230114/ejtJprgN/index.m3u8","https://pic4.zhimg.com/v2-d15cc0a211927d1fa3162da3911114cf_b.webp?consumer=ZHI_MENG","狂飙第一集");
+}</onClick></setOnClickListener></Yu5Src></Button><Button android:id="@+id/an3" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="下载2"><Yu5Src><setOnClickListener><onClick>java {
+  VideoDownloadListActivity.addVideoTaskIte("https://iqiyi.sd-play.com/20230309/oD25RB0z/index.m3u8","https://img2.doubanio.com/view/photo/l/public/p2877529911.jpg","画江湖之不良人6-第三集")
+}</onClick></setOnClickListener></Yu5Src></Button><Button android:id="@+id/an4" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="下载3"><Yu5Src><setOnClickListener><onClick>java {
+  VideoDownloadListActivity.addVideoTaskIte("https://s.xlzys.com/play/9avDmPgd/index.m3u8","https://i02piccdn.sogoucdn.com/8d28b961be8dbe18","斗破苍穹年番-第34集")
+}</onClick></setOnClickListener></Yu5Src></Button><Button android:id="@+id/an5" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="下载4"><Yu5Src><setOnClickListener><onClick>java VideoDownloadListActivity.addVideoTaskIte("https://iqiyi.sd-play.com/20211008/ijniHoX5/index.m3u8","https://nimg.ws.126.net/?url=http%3A%2F%2Fdingyue.ws.126.net%2F2020%2F0911%2F293bdbdfj00qghy7d0047c000uu00wsm.jpg&amp;thumbnail=750x2147483647&amp;quality=75&amp;type=jpg","武神主宰-第一集");</onClick></setOnClickListener></Yu5Src></Button><Button android:id="@+id/an2" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="下载管理"><Yu5Src><setOnClickListener><onClick>java new VideoDownloadListActivity().StartDownloadActivity(main.this);</onClick></setOnClickListener></Yu5Src></Button></LinearLayout>

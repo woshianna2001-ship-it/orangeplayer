@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<level-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 0-25%: 低电量警告 -->
+    <item android:maxLevel="25" android:drawable="@drawable/ic_battery_25"/>
+    <!-- 26-50%: 2格 -->
+    <item android:maxLevel="50" android:drawable="@drawable/ic_battery_50"/>
+    <!-- 51-75%: 3格 -->
+    <item android:maxLevel="75" android:drawable="@drawable/ic_battery_75"/>
+    <!-- 76-100%: 满电 -->
+    <item android:maxLevel="100" android:drawable="@drawable/ic_battery_full"/>
+</level-list>

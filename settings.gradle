@@ -1,0 +1,63 @@
+pluginManagement {
+    repositories {
+        google {
+            content {
+                includeGroupByRegex("com\\.android.*")
+                includeGroupByRegex("com\\.google.*")
+                includeGroupByRegex("androidx.*")
+            }
+        }
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        // Use Aliyun mirror for faster downloads in China
+        maven { url 'https://maven.aliyun.com/repository/public' }
+        maven { url 'https://maven.aliyun.com/repository/central' }
+        google()
+        mavenCentral()
+        // GSYVideoPlayer jitpack fallback repository
+        maven { url 'https://jitpack.io' }
+        // Aliyun Player SDK repository
+        maven { url 'https://maven.aliyun.com/repository/releases' }
+    }
+}
+
+// Use local GSYVideoPlayer source modules (with precompiled so files)
+// Base modules (required)
+include ':gsyVideoPlayer-base'
+include ':gsyVideoPlayer-proxy_cache'
+// Java layer modules
+include ':gsyVideoPlayer-java'
+// Player engine modules
+include ':gsyVideoPlayer-exo_player2'  // ExoPlayer engine
+include ':gsyVideoPlayer-aliplay'      // Aliyun Player engine
+// Native so file modules
+include ':gsyVideoPlayer-armv7a'
+include ':gsyVideoPlayer-armv64'
+include ':gsyVideoPlayer-x86'
+include ':gsyVideoPlayer-x86_64'
+include ':gsyVideoPlayer-ex_so'  // IJK with encryption support
+
+project(':gsyVideoPlayer-base').projectDir = new File(rootDir, 'GSYVideoPlayer-source/gsyVideoPlayer-base')
+project(':gsyVideoPlayer-proxy_cache').projectDir = new File(rootDir, 'GSYVideoPlayer-source/gsyVideoPlayer-proxy_cache')
+project(':gsyVideoPlayer-java').projectDir = new File(rootDir, 'GSYVideoPlayer-source/gsyVideoPlayer-java')
+project(':gsyVideoPlayer-exo_player2').projectDir = new File(rootDir, 'GSYVideoPlayer-source/gsyVideoPlayer-exo_player2')
+project(':gsyVideoPlayer-aliplay').projectDir = new File(rootDir, 'GSYVideoPlayer-source/gsyVideoPlayer-aliplay')
+project(':gsyVideoPlayer-armv7a').projectDir = new File(rootDir, 'GSYVideoPlayer-source/gsyVideoPlayer-armv7a')
+project(':gsyVideoPlayer-armv64').projectDir = new File(rootDir, 'GSYVideoPlayer-source/gsyVideoPlayer-armv64')
+project(':gsyVideoPlayer-x86').projectDir = new File(rootDir, 'GSYVideoPlayer-source/gsyVideoPlayer-x86')
+project(':gsyVideoPlayer-x86_64').projectDir = new File(rootDir, 'GSYVideoPlayer-source/gsyVideoPlayer-x86_64')
+project(':gsyVideoPlayer-ex_so').projectDir = new File(rootDir, 'GSYVideoPlayer-source/gsyVideoPlayer-ex_so')
+
+rootProject.name = "OrangePlayer"
+include ':app'
+include ':app-legacy'  // Android 4.4 compatible version
+include ':app-tv'      // Android TV version
+include ':palyerlibrary'
+include ':orange-downloader'  // Download module
+include ':orange-ffmpeg'  // FFmpeg minimal kit module
+

@@ -1,0 +1,386 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#1A1A1A"
+    tools:context=".MainActivity">
+
+    <!-- 播放器视图 -->
+    <com.orange.playerlibrary.OrangevideoView
+        android:id="@+id/video_view"
+        android:layout_width="match_parent"
+        android:layout_height="220dp" />
+
+    <!-- 视频链接输入区域 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="12dp"
+        android:gravity="center_vertical">
+
+        <EditText
+            android:id="@+id/et_video_url"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:background="@drawable/edit_text_bg"
+            android:hint="输入视频链接..."
+            android:textColorHint="#666666"
+            android:textColor="#FFFFFF"
+            android:textSize="13sp"
+            android:paddingHorizontal="12dp"
+            android:singleLine="true"
+            android:inputType="textUri" />
+
+        <Button
+            android:id="@+id/btn_play_url"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginStart="8dp"
+            android:text="播放"
+            android:textSize="13sp" />
+
+        <Button
+            android:id="@+id/btn_sniff_play"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginStart="4dp"
+            android:text="嗅探"
+            android:textSize="13sp" />
+
+    </LinearLayout>
+
+    <!-- 按钮区域（可滚动） -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- 控制按钮区域 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingHorizontal="12dp"
+                android:gravity="center">
+
+                <Button
+                    android:id="@+id/btn_play"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="播放"
+                    android:textSize="12sp" />
+
+                <Button
+                    android:id="@+id/btn_pause"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="4dp"
+                    android:text="暂停"
+                    android:textSize="12sp" />
+
+                <Button
+                    android:id="@+id/btn_fullscreen"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="4dp"
+                    android:text="全屏"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+
+            <!-- 弹幕测试按钮区域 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingHorizontal="12dp"
+                android:paddingTop="8dp"
+                android:gravity="center">
+
+                <Button
+                    android:id="@+id/btn_batch_danmaku"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="批量弹幕"
+                    android:textSize="11sp" />
+
+                <Button
+                    android:id="@+id/btn_send_danmaku"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="4dp"
+                    android:text="发送弹幕"
+                    android:textSize="11sp" />
+
+                <Button
+                    android:id="@+id/btn_toggle_danmaku"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="4dp"
+                    android:text="弹幕开关"
+                    android:textSize="11sp" />
+
+                <Button
+                    android:id="@+id/btn_history"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="4dp"
+                    android:text="播放历史"
+                    android:textSize="11sp" />
+
+            </LinearLayout>
+
+            <!-- 竖屏全屏测试按钮 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingHorizontal="12dp"
+                android:paddingTop="8dp"
+                android:gravity="center">
+
+                <Button
+                    android:id="@+id/btn_enter_portrait_fullscreen"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="进入竖屏全屏"
+                    android:textSize="11sp" />
+
+                <Button
+                    android:id="@+id/btn_exit_portrait_fullscreen"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="4dp"
+                    android:text="退出竖屏全屏"
+                    android:textSize="11sp" />
+
+            </LinearLayout>
+
+            <!-- 更多功能示例按钮 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingHorizontal="12dp"
+                android:paddingTop="8dp"
+                android:gravity="center">
+
+                <Button
+                    android:id="@+id/btn_speed_test"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="倍速测试"
+                    android:textSize="11sp" />
+
+                <Button
+                    android:id="@+id/btn_switch_player"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="4dp"
+                    android:text="切换播放器"
+                    android:textSize="11sp" />
+
+                <Button
+                    android:id="@+id/btn_subtitle_test"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="4dp"
+                    android:text="字幕测试"
+                    android:textSize="11sp" />
+
+                <Button
+                    android:id="@+id/btn_pip_test"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="4dp"
+                    android:text="画中画"
+                    android:textSize="11sp" />
+
+            </LinearLayout>
+
+            <!-- 选集和播放功能按钮 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingHorizontal="12dp"
+                android:paddingTop="8dp"
+                android:gravity="center">
+
+                <Button
+                    android:id="@+id/btn_add_episodes"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="添加选集"
+                    android:textSize="11sp" />
+
+                <Button
+                    android:id="@+id/btn_show_playlist"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="4dp"
+                    android:text="显示选集"
+                    android:textSize="11sp" />
+
+                <Button
+                    android:id="@+id/btn_play_next"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="4dp"
+                    android:text="下一集"
+                    android:textSize="11sp" />
+
+                <Button
+                    android:id="@+id/btn_play_mode"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="4dp"
+                    android:text="播放方式"
+                    android:textSize="11sp" />
+
+            </LinearLayout>
+
+            <!-- 投屏和下载功能按钮 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingHorizontal="12dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:gravity="center">
+
+                <Button
+                    android:id="@+id/btn_cast_screen"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="投屏"
+                    android:textSize="11sp" />
+
+                <Button
+                    android:id="@+id/btn_download_video"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="4dp"
+                    android:text="下载视频"
+                    android:textSize="11sp" />
+
+                <Button
+                    android:id="@+id/btn_clear_episodes"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="4dp"
+                    android:text="清空选集"
+                    android:textSize="11sp" />
+
+                <Button
+                    android:id="@+id/btn_test_feature"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="4dp"
+                    android:text="更多测试"
+                    android:textSize="11sp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+    
+    <!-- 调试日志（固定高度，可滚动） -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:background="#222222">
+
+        <TextView
+            android:id="@+id/tv_debug_log"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:textColor="#00FF00"
+            android:textSize="11sp"
+            android:fontFamily="monospace"
+            android:text="调试日志..." />
+
+    </ScrollView>
+
+    <!-- 播放器介绍信息 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="12dp"
+        android:background="#2A2A2A">
+
+        <TextView
+            android:id="@+id/tv_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#FF9800"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:text="🍊 橘子播放器 SDK Demo" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textColor="#AAAAAA"
+            android:textSize="11sp"
+            android:text="基于 GSYVideoPlayer 开源播放器框架\n支持 ALIPlayer/IJK/EXO/系统播放器内核切换" />
+
+        <TextView
+            android:id="@+id/tv_github"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textColor="#4FC3F7"
+            android:textSize="11sp"
+            android:autoLink="web"
+            android:text="GSY: https://github.com/CarGuo/GSYVideoPlayer" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:textColor="#888888"
+            android:textSize="10sp"
+            android:text="特色: 弹幕支持 | 视频嗅探 | 画中画 | 手势控制 | 倍速播放 | 拖动预览 | 投屏 | 自定义UI | 实时网速显示 | 选集 | 首帧显示 " />
+
+    </LinearLayout>
+
+</LinearLayout>

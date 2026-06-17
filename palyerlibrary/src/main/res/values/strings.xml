@@ -1,0 +1,57 @@
+<resources>
+    <string name="playerlibrary_name">OrangePlayer</string>
+    
+    <!-- 播放器相关字符串 -->
+    <string name="orange_continue_play">继续播放</string>
+    <string name="orange_error_message">出了点小问题，请稍后重试</string>
+    <string name="orange_lock_tip">请先解锁屏幕！</string>
+    <string name="orange_locked">已锁定</string>
+    <string name="orange_unlocked">已解锁</string>
+    <string name="orange_replay">重新播放</string>
+    <string name="orange_retry">重    试</string>
+    <string name="orange_wifi_tip">您正在使用移动网络，继续播放将消耗流量</string>
+    
+    <!-- 控件描述字符串 -->
+    <string name="play_desc">播放/暂停</string>
+    <string name="fullscreen_desc">全屏</string>
+    <string name="arrow_desc">指示箭头</string>
+    <string name="preview_desc">视频预览</string>
+    
+    <!-- DKPlayer 兼容字符串 -->
+    <string name="dkplayer_continue_play">继续播放</string>
+    <string name="dkplayer_error_message">出了点小问题，请稍后重试</string>
+    <string name="dkplayer_lock_tip">请先解锁屏幕！</string>
+    <string name="dkplayer_locked">已锁定</string>
+    <string name="dkplayer_replay">重新播放</string>
+    <string name="dkplayer_retry"> 重    试 </string>
+    <string name="dkplayer_unlocked">已解锁</string>
+    <string name="dkplayer_wifi_tip">您正在使用移动网络，继续播放将消耗流量</string>
+    
+    <!-- VodControlView 字符串 -->
+    <string name="orange_preview_unavailable">Preview Unavailable</string>
+    <string name="orange_default_time">00:00</string>
+    <string name="orange_danmu_hint">发条友善的弹幕吧~</string>
+    <string name="orange_skip_header_footer">片头/尾</string>
+    <string name="orange_speed_control">倍速</string>
+    <string name="orange_source_select">播放源</string>
+    <string name="orange_episode_select">选集</string>
+    <string name="orange_play_desc">播放</string>
+    <string name="orange_fullscreen_desc">全屏</string>
+    <string name="orange_next_episode_desc">下一集</string>
+    <string name="orange_subtitle_desc">字幕</string>
+    <string name="orange_lock_desc">锁定屏幕</string>
+    <string name="orange_rotation_desc">旋转屏幕</string>
+    
+    <!-- VodControlView Toast 消息 -->
+    <string name="orange_long_press_speed">长按加速 %1$.1fx</string>
+    <string name="orange_restore_normal_speed">恢复正常速度 %1$.1fx</string>
+    
+    <!-- TitleView 字符串 -->
+    <string name="orange_back">返回</string>
+    <string name="orange_cast">投屏</string>
+    <string name="orange_settings">设置</string>
+    <string name="orange_window_mode">小窗模式</string>
+    <string name="orange_timer">定时</string>
+    <string name="orange_battery_level">电池电量</string>
+    <string name="orange_live_indicator">直播</string>
+</resources>

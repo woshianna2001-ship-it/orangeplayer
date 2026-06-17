@@ -1,0 +1,169 @@
+plugins {
+    id 'com.android.application'
+}
+
+def supportedAppAbis = ["armeabi-v7a", "arm64-v8a", "x86", "x86_64"]
+def appDebugAbis = ((project.findProperty("orangeAppDebugAbis") ?: "arm64-v8a").toString())
+        .split(",")
+        .collect { it.trim() }
+        .findAll { !it.isEmpty() }
+def appReleaseAbis = ((project.findProperty("orangeAppReleaseAbis") ?: "arm64-v8a").toString())
+        .split(",")
+        .collect { it.trim() }
+        .findAll { !it.isEmpty() }
+
+def invalidDebugAbis = appDebugAbis.findAll { !supportedAppAbis.contains(it) }
+def invalidReleaseAbis = appReleaseAbis.findAll { !supportedAppAbis.contains(it) }
+if (!invalidDebugAbis.isEmpty() || !invalidReleaseAbis.isEmpty()) {
+    throw new GradleException("[app] invalid ABI config, debug=${invalidDebugAbis}, release=${invalidReleaseAbis}, allowed=${supportedAppAbis}")
+}
+
+android {
+    namespace 'com.orange.player'
+    compileSdk 36
+
+    defaultConfig {
+        applicationId "com.orange.player"
+        minSdk 23  // FFmpeg 解码器需要 API 23+
+        targetSdk 36
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    signingConfigs {
+        release {
+            // 如果有签名文件，取消注释以下配置
+             storeFile file('smlieapp.jks')
+             storePassword '123123'
+             keyAlias 'smlieapp'
+             keyPassword '123123'
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            shrinkResources true
+            signingConfig signingConfigs.release
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            ndk {
+                abiFilters(*appReleaseAbis)
+            }
+        }
+        debug {
+            minifyEnabled false  // Debug 不启用代码压缩，方便调试
+            shrinkResources false  // Debug 不启用资源压缩
+            signingConfig signingConfigs.release
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            ndk {
+                abiFilters(*appDebugAbis)
+            }
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+    
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
+            returnDefaultValues = true
+        }
+    }
+
+}
+
+
+dependencies {
+
+    implementation 'androidx.appcompat:appcompat:1.7.1'
+    implementation 'com.google.android.material:material:1.13.0'
+    implementation 'androidx.activity:activity:1.11.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.2.1'
+    
+    // 自定义播放器模块
+    implementation project(':palyerlibrary')
+    
+    // 播放器内核 - 使用本地 GSYVideoPlayer 模块
+    // Java 层实现（必需！包含播放器核心逻辑）
+    implementation project(':gsyVideoPlayer-java')
+    
+    // Native so 文件（二选一）
+    // 方案 1：使用 ex_so 模块（支持加密视频，包含所有架构）
+    implementation project(':gsyVideoPlayer-ex_so')   // IJK with encryption support
+    
+    // 方案 2：使用标准 so 模块（不支持加密视频，按需选择架构）
+    // implementation project(':gsyVideoPlayer-armv7a')  // ARM 32位架构
+    // implementation project(':gsyVideoPlayer-armv64')  // ARM 64位架构
+    // implementation project(':gsyVideoPlayer-x86')     // x86 32位架构
+    // implementation project(':gsyVideoPlayer-x86_64')  // x86 64位架构
+    
+    // ExoPlayer 内核（可选，需要 API 21+）- 使用本地模块
+    implementation project(':gsyVideoPlayer-exo_player2')
+    
+    // 阿里云播放器内核（可选）- 使用本地模块
+    implementation(project(':gsyVideoPlayer-aliplay')) {
+        // 排除内置的阿里云播放器 SDK，使用 5.4.7.1 免授权版本
+        exclude group: 'com.aliyun.sdk.android', module: 'AliyunPlayer'
+        exclude group: 'com.alivc.conan', module: 'AlivcConan'
+    }
+    implementation 'com.aliyun.sdk.android:AliyunPlayer:5.4.7.1-full'
+    
+    // 必需依赖
+    implementation 'com.github.bumptech.glide:glide:4.16.0'
+    
+    // 可选功能
+    implementation 'com.github.bilibili:DanmakuFlameMaster:0.9.25'           // 弹幕
+    implementation 'cz.adaptech.tesseract4android:tesseract4android:4.7.0'   // OCR 识别
+    implementation 'com.google.mlkit:translate:17.0.2'                        // ML Kit 翻译
+    implementation 'com.alphacephei:vosk-android:0.3.47'                      // 语音识别
+
+    // Torrent playback (libtorrent4j) - runtime dependencies
+    def libtorrent_version = '2.0.6-26'
+    implementation "org.libtorrent4j:libtorrent4j:${libtorrent_version}"
+    implementation "org.libtorrent4j:libtorrent4j-android-arm:${libtorrent_version}"
+    implementation "org.libtorrent4j:libtorrent4j-android-arm64:${libtorrent_version}"
+    implementation "org.libtorrent4j:libtorrent4j-android-x86:${libtorrent_version}"
+    implementation "org.libtorrent4j:libtorrent4j-android-x86_64:${libtorrent_version}"
+
+    // VideoDownloader 依赖（M3U8 下载功能需要）
+    implementation 'com.squareup.okhttp3:okhttp:4.9.3'
+    implementation 'com.google.code.gson:gson:2.10.1'
+
+    // 可选 FFmpeg merge 运行时（orange-downloader 为 compileOnly，App 侧按需显式引入）
+    implementation project(':orange-ffmpeg')
+
+    
+    // DialogX 弹窗库（下载管理界面需要）
+    // 注意：DialogX 包含 DialogXInterface，需排除传递依赖避免重复类
+    implementation('com.github.kongzue:DialogX:0.0.50') {
+        transitive = false
+    }
+    
+    // FFmpeg 解码器（二选一）
+    // 方案 1：Google 官方 Media3 FFmpeg 解码器（推荐）
+    // implementation 'androidx.media3:media3-decoder-ffmpeg:1.5.0'
+    
+    // 方案 2：Jellyfin 定制版 FFmpeg 解码器（与 SurfaceControl 兼容）
+    implementation 'org.jellyfin.media3:media3-ffmpeg-decoder:1.8.0+1'
+    
+    // 注意：FFmpeg 解码器只提供音视频解码能力，不提供协议支持
+    // 如需播放 RTSP 直播，请使用 ExoPlayer 或 IJK 内核，而不是依赖 FFmpeg 解码器
+    
+    // DLNA 投屏库 (UaoanDLNA)
+    implementation 'com.github.uaoan:UaoanDLNA:1.0.1'
+    implementation 'com.squareup.okhttp3:okhttp:4.9.0'
+    implementation 'com.squareup.okio:okio:2.10.0'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.5.30'
+    
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.mockito:mockito-core:5.3.1'
+    testImplementation 'org.robolectric:robolectric:4.11.1'
+    testImplementation 'androidx.test:core:1.5.0'
+    androidTestImplementation 'androidx.test.ext:junit:1.3.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.7.0'
+}

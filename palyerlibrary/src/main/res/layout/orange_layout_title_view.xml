@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/title_container"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/orange_controller_height"
+        android:background="@drawable/orange_shape_controller_top_bg"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <!-- 返回按钮 -->
+        <ImageView
+            android:id="@+id/back"
+            android:layout_width="@dimen/orange_controller_height"
+            android:layout_height="@dimen/orange_controller_height"
+            android:layout_gravity="center"
+            android:layout_marginLeft="8dp"
+            android:padding="@dimen/orange_controller_icon_padding"
+            android:src="@drawable/orange_ic_action_arrow_back"
+            android:contentDescription="@string/orange_back" />
+
+        <!-- 标题区域 -->
+        <LinearLayout
+            android:id="@+id/titleui"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="marquee"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:paddingLeft="6dp"
+                android:paddingRight="6dp"
+                android:singleLine="true"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/orange_controller_text_size"
+                tools:text="视频标题" />
+
+            <!-- 直播标识 -->
+            <ImageView
+                android:id="@+id/live"
+                android:layout_width="35dp"
+                android:layout_height="20dp"
+                android:visibility="gone"
+                android:contentDescription="@string/orange_live_indicator" />
+        </LinearLayout>
+
+        <!-- 嗅探按钮 -->
+        <ImageView
+            android:id="@+id/iv_sniffing"
+            android:layout_width="@dimen/orange_controller_height"
+            android:layout_height="@dimen/orange_controller_height"
+            android:padding="@dimen/orange_controller_icon_padding"
+            android:src="@drawable/ic_sniffing"
+            android:visibility="gone"
+            android:contentDescription="视频嗅探" />
+
+        <!-- 小窗按钮 -->
+        <ImageView
+            android:id="@+id/iv_window"
+            android:layout_width="@dimen/orange_controller_height"
+            android:layout_height="@dimen/orange_controller_height"
+            android:padding="@dimen/orange_controller_icon_padding"
+            android:src="@drawable/ic_pip_window"
+            android:visibility="visible"
+            android:contentDescription="@string/orange_window_mode" />
+
+        <!-- 定时按钮 (可选) -->
+        <ImageView
+            android:id="@+id/iv_timer"
+            android:layout_width="@dimen/orange_controller_height"
+            android:layout_height="@dimen/orange_controller_height"
+            android:padding="@dimen/orange_controller_icon_padding"
+            android:src="@drawable/ic_timer"
+            android:visibility="gone"
+            android:contentDescription="@string/orange_timer" />
+
+        <!-- 投屏图标 -->
+        <ImageView
+            android:id="@+id/iv_cast"
+            android:layout_width="@dimen/orange_controller_height"
+            android:layout_height="@dimen/orange_controller_height"
+            android:padding="@dimen/orange_controller_icon_padding"
+            android:src="@drawable/ic_cast"
+            android:visibility="gone"
+            android:contentDescription="@string/orange_cast" />
+
+        <!-- 设置图标 -->
+        <ImageView
+            android:id="@+id/iv_settings"
+            android:layout_width="@dimen/orange_controller_height"
+            android:layout_height="@dimen/orange_controller_height"
+            android:padding="@dimen/orange_controller_icon_padding"
+            android:src="@drawable/ic_settings_player"
+            android:visibility="gone"
+            android:contentDescription="@string/orange_settings" />
+
+        <!-- 电量和时间区域 (垂直布局：电量在上，时间在下) -->
+        <LinearLayout
+            android:id="@+id/battery_time_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="12dp"
+            android:layout_marginRight="12dp"
+            android:layout_gravity="center_vertical"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <!-- 电池图标 - 保持2:1比例匹配drawable -->
+            <ImageView
+                android:id="@+id/iv_battery"
+                android:layout_width="36dp"
+                android:layout_height="18dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_battery_level"
+                android:contentDescription="@string/orange_battery_level" />
+
+            <!-- 系统时间 -->
+            <TextView
+                android:id="@+id/sys_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="1dp"
+                android:includeFontPadding="false"
+                android:textColor="@android:color/white"
+                android:textSize="11sp"
+                tools:text="12:00" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</FrameLayout>

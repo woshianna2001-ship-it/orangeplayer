@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="playerlibrary_name">OrangePlayer</string>
+    
+    <!-- Orange Player English strings -->
+    <string name="orange_continue_play">Continue playing</string>
+    <string name="orange_error_message">Something went wrong, please try again later</string>
+    <string name="orange_lock_tip">Please unlock the screen first!</string>
+    <string name="orange_locked">Locked</string>
+    <string name="orange_unlocked">Unlocked</string>
+    <string name="orange_replay">Replay</string>
+    <string name="orange_retry">  Retry  </string>
+    <string name="orange_wifi_tip">You are currently using the mobile network, and continuing to play will consume traffic</string>
+    
+    <!-- Control descriptions -->
+    <string name="play_desc">Play/Pause</string>
+    <string name="fullscreen_desc">Fullscreen</string>
+    <string name="arrow_desc">Arrow indicator</string>
+    <string name="preview_desc">Video preview</string>
+    
+    <!-- DKPlayer compatibility strings -->
+    <string name="dkplayer_continue_play">Continue playing</string>
+    <string name="dkplayer_error_message">Something went wrong, please try again later</string>
+    <string name="dkplayer_lock_tip">Please unlock the screen first!</string>
+    <string name="dkplayer_locked">Locked</string>
+    <string name="dkplayer_replay">Replay</string>
+    <string name="dkplayer_retry">  Retry  </string>
+    <string name="dkplayer_unlocked">Unlocked</string>
+    <string name="dkplayer_wifi_tip">You are currently using the mobile network, and continuing to play will consume traffic</string>
+    
+    <!-- VodControlView strings -->
+    <string name="orange_preview_unavailable">Preview Unavailable</string>
+    <string name="orange_default_time">00:00</string>
+    <string name="orange_danmu_hint">Send a friendly comment~</string>
+    <string name="orange_skip_header_footer">Skip Intro/Outro</string>
+    <string name="orange_speed_control">Speed</string>
+    <string name="orange_source_select">Source</string>
+    <string name="orange_episode_select">Episodes</string>
+    <string name="orange_play_desc">Play</string>
+    <string name="orange_fullscreen_desc">Fullscreen</string>
+    <string name="orange_next_episode_desc">Next Episode</string>
+    
+    <!-- VodControlView Toast messages -->
+    <string name="orange_long_press_speed">Long press speed %1$.1fx</string>
+    <string name="orange_restore_normal_speed">Restore normal speed %1$.1fx</string>
+    
+    <!-- TitleView strings -->
+    <string name="orange_back">Back</string>
+    <string name="orange_cast">Cast</string>
+    <string name="orange_settings">Settings</string>
+    <string name="orange_window_mode">Window Mode</string>
+    <string name="orange_timer">Timer</string>
+    <string name="orange_battery_level">Battery Level</string>
+    <string name="orange_live_indicator">Live</string>
+</resources>

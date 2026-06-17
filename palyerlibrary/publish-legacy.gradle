@@ -1,0 +1,134 @@
+// Maven Central 发布配置 - 兼容 Android 4.0+ 版本
+apply plugin: 'maven-publish'
+apply plugin: 'signing'
+
+// 版本信息
+ext {
+    PUBLISH_GROUP_ID = 'io.github.yourusername'  // 替换为你的 GitHub 用户名
+    PUBLISH_ARTIFACT_ID = 'orangeplayer-legacy'
+    PUBLISH_VERSION = '1.0.0-api14'  // 标注支持 API 14
+}
+
+// 生成源码 JAR
+task androidSourcesJar(type: Jar) {
+    archiveClassifier.set('sources')
+    from android.sourceSets.main.java.srcDirs
+}
+
+// 生成 Javadoc JAR
+task androidJavadocJar(type: Jar) {
+    archiveClassifier.set('javadoc')
+    from android.sourceSets.main.java.srcDirs
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                groupId PUBLISH_GROUP_ID
+                artifactId PUBLISH_ARTIFACT_ID
+                version PUBLISH_VERSION
+                
+                // 发布 AAR 文件
+                artifact bundleReleaseAar
+                
+                // 添加源码和文档
+                artifact androidSourcesJar
+                artifact androidJavadocJar
+                
+                pom {
+                    name = 'Orange Player Legacy'
+                    description = 'Android video player library with support for Android 4.0+ (API 14+). Based on IJKPlayer with danmaku, DLNA cast, and more features.'
+                    url = 'https://github.com/yourusername/orangeplayer'
+                    
+                    licenses {
+                        license {
+                            name = 'The Apache License, Version 2.0'
+                            url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        }
+                    }
+                    
+                    developers {
+                        developer {
+                            id = 'yourusername'
+                            name = 'Your Name'
+                            email = 'your.email@example.com'
+                        }
+                    }
+                    
+                    scm {
+                        connection = 'scm:git:git://github.com/yourusername/orangeplayer.git'
+                        developerConnection = 'scm:git:ssh://github.com/yourusername/orangeplayer.git'
+                        url = 'https://github.com/yourusername/orangeplayer'
+                    }
+                    
+                    // 添加依赖信息
+                    withXml {
+                        def dependenciesNode = asNode().appendNode('dependencies')
+                        
+                        // 必需依赖
+                        def addDependency = { groupId, artifactId, version, scope = 'compile', optional = false ->
+                            def dependencyNode = dependenciesNode.appendNode('dependency')
+                            dependencyNode.appendNode('groupId', groupId)
+                            dependencyNode.appendNode('artifactId', artifactId)
+                            dependencyNode.appendNode('version', version)
+                            dependencyNode.appendNode('scope', scope)
+                            if (optional) {
+                                dependencyNode.appendNode('optional', 'true')
+                            }
+                        }
+                        
+                        // 核心依赖（必需）
+                        addDependency('com.github.bumptech.glide', 'glide', '4.12.0', 'compile')
+                        
+                        // GSYVideoPlayer 依赖（必需 - 使用本地源码版本）
+                        addDependency('com.shuyu.gsyvideoplayer', 'gsyVideoPlayer-base', '1.0.0', 'compile')
+                        addDependency('com.shuyu.gsyvideoplayer', 'gsyVideoPlayer-proxy_cache', '1.0.0', 'compile')
+                        addDependency('com.shuyu.gsyvideoplayer', 'gsyVideoPlayer-java', '1.0.0', 'compile')
+                        
+                        // Native so 文件（至少需要一个架构）
+                        addDependency('com.shuyu.gsyvideoplayer', 'gsyVideoPlayer-armv7a', '1.0.0', 'runtime')
+                        addDependency('com.shuyu.gsyvideoplayer', 'gsyVideoPlayer-armv64', '1.0.0', 'runtime')
+                        
+                        // 可选依赖（用户按需添加）
+                        addDependency('androidx.appcompat', 'appcompat', '1.3.1', 'compile', true)
+                        addDependency('com.github.bilibili', 'DanmakuFlameMaster', '0.9.25', 'compile', true)
+                        addDependency('com.github.uaoan', 'UaoanDLNA', '1.0.1', 'compile', true)
+                    }
+                }
+            }
+        }
+        
+        repositories {
+            maven {
+                name = "sonatype"
+                def releasesRepoUrl = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
+                def snapshotsRepoUrl = "https://s01.oss.sonatype.org/content/repositories/snapshots/"
+                url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+                
+                credentials {
+                    username = project.findProperty("ossrhUsername") ?: System.getenv("OSSRH_USERNAME")
+                    password = project.findProperty("ossrhPassword") ?: System.getenv("OSSRH_PASSWORD")
+                }
+            }
+            
+            // 本地 Maven 仓库（用于测试）
+            maven {
+                name = "local"
+                url = uri("${rootProject.buildDir}/local-maven")
+            }
+        }
+    }
+    
+    // 签名配置（发布到 Maven Central 必需）
+    signing {
+        // 使用 GPG 签名
+        def signingKey = project.findProperty("signing.keyId") ?: System.getenv("SIGNING_KEY_ID")
+        def signingPassword = project.findProperty("signing.password") ?: System.getenv("SIGNING_PASSWORD")
+        def signingSecretKeyRingFile = project.findProperty("signing.secretKeyRingFile") ?: System.getenv("SIGNING_SECRET_KEY_RING_FILE")
+        
+        if (signingKey && signingPassword && signingSecretKeyRingFile) {
+            sign publishing.publications
+        }
+    }
+}

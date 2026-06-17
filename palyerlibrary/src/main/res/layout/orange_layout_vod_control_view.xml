@@ -1,0 +1,378 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- 锁定按钮 (全屏时显示在左侧) -->
+    <ImageView
+        android:id="@+id/iv_lock"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_gravity="start|center_vertical"
+        android:layout_marginStart="16dp"
+        android:padding="12dp"
+        android:src="@drawable/selector_lock_button"
+        android:contentDescription="@string/orange_lock_desc"
+        android:visibility="gone" />
+
+    <!-- 横竖屏切换按钮 (全屏时显示在屏幕右侧) -->
+    <ImageView
+        android:id="@+id/rotation_button"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_gravity="end|center_vertical"
+        android:layout_marginEnd="16dp"
+        android:padding="12dp"
+        android:src="@drawable/ic_rotation"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/orange_rotation_desc"
+        android:visibility="gone" />
+
+    <!-- 视频预览容器 -->
+    <LinearLayout
+        android:id="@+id/preview_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="@dimen/orange_preview_margin_bottom"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <!-- 预览内容区域 -->
+        <FrameLayout
+            android:id="@+id/preview_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/preview_border"
+            android:padding="@dimen/orange_preview_padding">
+
+            <RelativeLayout
+                android:layout_width="@dimen/orange_preview_width"
+                android:layout_height="@dimen/orange_preview_height"
+                android:background="@color/orange_preview_background">
+
+                <!-- 预览图像 -->
+                <ImageView
+                    android:id="@+id/preview_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:contentDescription="@string/preview_desc" />
+
+                <!-- 加载指示器 -->
+                <ProgressBar
+                    android:id="@+id/preview_progress"
+                    style="?android:attr/progressBarStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:indeterminate="true"
+                    android:visibility="visible" />
+
+                <!-- 预览时间显示 -->
+                <TextView
+                    android:id="@+id/preview_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:background="@color/orange_preview_time_background"
+                    android:paddingHorizontal="@dimen/orange_preview_time_padding_horizontal"
+                    android:paddingVertical="@dimen/orange_preview_time_padding_vertical"
+                    android:text="@string/orange_default_time"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/orange_preview_time_text_size" />
+
+                <!-- 错误提示 -->
+                <TextView
+                    android:id="@+id/preview_error"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:gravity="center"
+                    android:padding="@dimen/orange_preview_error_padding"
+                    android:text="@string/orange_preview_unavailable"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/orange_preview_error_text_size"
+                    android:visibility="gone" />
+            </RelativeLayout>
+        </FrameLayout>
+
+        <!-- 指向拖动条的小箭头 -->
+        <ImageView
+            android:layout_width="@dimen/orange_preview_arrow_width"
+            android:layout_height="@dimen/orange_preview_arrow_height"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/orange_preview_arrow_margin_top"
+            android:src="@drawable/ic_triangle_down"
+            android:contentDescription="@string/arrow_desc" />
+    </LinearLayout>
+
+    <!-- 底部控制区域 -->
+    <LinearLayout
+        android:id="@+id/bottom_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="@drawable/orange_shape_controller_bottom_bg"
+        android:orientation="vertical"
+        android:paddingStart="@dimen/orange_bottom_container_padding"
+        android:paddingEnd="@dimen/orange_bottom_container_padding">
+
+        <!-- 第一行: 基本控制 -->
+        <LinearLayout
+            android:id="@+id/container_main"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/orange_controller_height"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:visibility="visible">
+
+            <!-- 播放按钮 -->
+            <ImageView
+                android:id="@+id/iv_play"
+                android:layout_width="@dimen/orange_controller_height"
+                android:layout_height="@dimen/orange_controller_height"
+                android:contentDescription="@string/orange_play_desc"
+                android:padding="@dimen/orange_controller_icon_padding"
+                android:src="@drawable/orange_selector_play_button" />
+
+            <!-- 当前时间 -->
+            <TextView
+                android:id="@+id/curr_time"
+                android:layout_width="@dimen/orange_time_text_width"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:minWidth="@dimen/orange_time_text_width"
+                android:text="@string/orange_default_time"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/orange_time_text_size" />
+
+            <!-- 进度条 -->
+            <SeekBar
+                android:id="@+id/seekBar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="@dimen/orange_seekbar_margin"
+                android:layout_marginEnd="@dimen/orange_seekbar_margin"
+                android:layout_weight="1"
+                android:background="@null"
+                android:max="@integer/orange_seekbar_max"
+                android:maxHeight="@dimen/orange_seekbar_height"
+                android:minHeight="@dimen/orange_seekbar_height"
+                android:paddingStart="0dp"
+                android:paddingEnd="0dp"
+                android:progressDrawable="@drawable/seekbar_progress"
+                android:thumb="@drawable/dkplayer_seekbar_thumb"
+                android:thumbOffset="0dp" />
+
+            <!-- 总时长 -->
+            <TextView
+                android:id="@+id/total_time"
+                android:layout_width="@dimen/orange_time_text_width"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:minWidth="@dimen/orange_time_text_width"
+                android:text="@string/orange_default_time"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/orange_time_text_size" />
+
+            <!-- 竖屏全屏按钮 -->
+            <ImageView
+                android:id="@+id/shup"
+                android:layout_width="@dimen/orange_controller_height"
+                android:layout_height="@dimen/orange_controller_height"
+                android:padding="@dimen/orange_controller_icon_padding"
+                android:src="@mipmap/shup"
+                android:visibility="gone"
+                android:contentDescription="@string/orange_fullscreen_desc" />
+
+            <!-- 全屏按钮 -->
+            <ImageView
+                android:id="@+id/fullscreen"
+                android:layout_width="@dimen/orange_controller_height"
+                android:layout_height="@dimen/orange_controller_height"
+                android:contentDescription="@string/orange_fullscreen_desc"
+                android:padding="@dimen/orange_controller_icon_padding"
+                android:src="@drawable/dkplayer_selector_full_screen_button" />
+        </LinearLayout>
+
+        <!-- 第二行: 弹幕功能区 (只在全屏显示) -->
+        <LinearLayout
+            android:id="@+id/danmu_container"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/orange_danmu_container_height"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <!-- 播放按钮（全屏时显示在弹幕区） -->
+            <ImageView
+                android:id="@+id/iv_play_fullscreen"
+                android:layout_width="@dimen/orange_controller_height"
+                android:layout_height="@dimen/orange_controller_height"
+                android:contentDescription="@string/orange_play_desc"
+                android:padding="@dimen/orange_controller_icon_padding"
+                android:src="@drawable/orange_selector_play_button" />
+
+            <!-- 下一集按钮 -->
+            <ImageView
+                android:id="@+id/playnext"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:contentDescription="@string/orange_next_episode_desc"
+                android:padding="6dp"
+                android:src="@drawable/ic_skip_next"
+                android:background="?android:attr/selectableItemBackground" />
+
+            <!-- 弹幕开关按钮 - 使用两个ImageView切换 -->
+            <FrameLayout
+                android:layout_width="36dp"
+                android:layout_height="36dp">
+                
+                <ImageView
+                    android:id="@+id/danmu_toggle_on"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:padding="6dp"
+                    android:src="@drawable/ic_danmu_on"
+                    android:scaleType="fitCenter"
+                    android:visibility="gone"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:contentDescription="@string/orange_play_desc" />
+                
+                <ImageView
+                    android:id="@+id/danmu_toggle_off"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:padding="6dp"
+                    android:src="@drawable/ic_danmu_off"
+                    android:scaleType="fitCenter"
+                    android:visibility="visible"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:contentDescription="@string/orange_play_desc" />
+            </FrameLayout>
+
+            <!-- 弹幕设置按钮 - 使用原图标 -->
+            <ImageView
+                android:id="@+id/danmu_set"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:padding="6dp"
+                android:src="@mipmap/danmu_set"
+                android:scaleType="fitCenter"
+                android:background="?android:attr/selectableItemBackground"
+                android:contentDescription="@string/orange_play_desc" />
+
+            <!-- 弹幕输入框 -->
+            <EditText
+                android:id="@+id/danmu_input"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/orange_danmu_input_height"
+                android:layout_marginHorizontal="@dimen/orange_danmu_input_margin"
+                android:layout_weight="1"
+                android:background="@drawable/edit_text_bg"
+                android:editable="false"
+                android:focusable="false"
+                android:hint="@string/orange_danmu_hint"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:maxWidth="@dimen/orange_danmu_input_max_width"
+                android:paddingStart="@dimen/orange_danmu_input_padding_start"
+                android:textColor="@android:color/white"
+                android:textColorHint="@color/orange_danmu_hint_color"
+                android:textSize="@dimen/orange_danmu_input_text_size" />
+
+            <!-- 字幕按钮 -->
+            <ImageView
+                android:id="@+id/subtitle_toggle"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:padding="6dp"
+                android:src="@drawable/ic_subtitle"
+                android:scaleType="fitCenter"
+                android:background="?android:attr/selectableItemBackground"
+                android:contentDescription="@string/orange_subtitle_desc" />
+
+            <!-- 片头/尾按钮 -->
+            <TextView
+                android:id="@+id/film_header_footer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="?android:attr/selectableItemBackground"
+                android:paddingStart="6dp"
+                android:paddingEnd="6dp"
+                android:paddingTop="@dimen/orange_control_button_padding"
+                android:paddingBottom="@dimen/orange_control_button_padding"
+                android:text="@string/orange_skip_header_footer"
+                android:textColor="@android:color/white"
+                android:textSize="13sp"
+                android:minWidth="0dp" />
+
+            <!-- 倍速按钮 -->
+            <TextView
+                android:id="@+id/speed_control"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="?android:attr/selectableItemBackground"
+                android:paddingStart="6dp"
+                android:paddingEnd="6dp"
+                android:paddingTop="@dimen/orange_control_button_padding"
+                android:paddingBottom="@dimen/orange_control_button_padding"
+                android:text="@string/orange_speed_control"
+                android:textColor="@android:color/white"
+                android:textSize="13sp"
+                android:minWidth="0dp" />
+
+            <!-- 播放源按钮 -->
+            <TextView
+                android:id="@+id/source_select"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="?android:attr/selectableItemBackground"
+                android:padding="@dimen/orange_control_button_padding"
+                android:text="@string/orange_source_select"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/orange_control_button_text_size"
+                android:visibility="gone" />
+
+            <!-- 选集按钮 -->
+            <TextView
+                android:id="@+id/episode_select"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="?android:attr/selectableItemBackground"
+                android:paddingStart="6dp"
+                android:paddingEnd="6dp"
+                android:paddingTop="@dimen/orange_control_button_padding"
+                android:paddingBottom="@dimen/orange_control_button_padding"
+                android:text="@string/orange_episode_select"
+                android:textColor="@android:color/white"
+                android:textSize="13sp"
+                android:minWidth="0dp" />
+
+            <!-- 全屏按钮（全屏时显示在弹幕区） -->
+            <ImageView
+                android:id="@+id/fullscreen_danmu"
+                android:layout_width="@dimen/orange_controller_height"
+                android:layout_height="@dimen/orange_controller_height"
+                android:contentDescription="@string/orange_fullscreen_desc"
+                android:padding="@dimen/orange_controller_icon_padding"
+                android:src="@drawable/dkplayer_selector_full_screen_button" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- 底部细进度条 (全屏时显示) -->
+    <ProgressBar
+        android:id="@+id/bottom_progress"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/orange_bottom_progress_height"
+        android:layout_gravity="bottom"
+        android:max="@integer/orange_seekbar_max"
+        android:progressDrawable="@drawable/bottom_progress_drawable"
+        android:visibility="gone" />
+
+</FrameLayout>

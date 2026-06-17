@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+    <solid android:color="#FFFFFFFF" />
+    <size android:width="12dp" android:height="12dp" />
+    <stroke
+        android:width="0.2dp"
+        android:color="#FFFFFFFF" /> <!-- 注意末尾的/ -->
+    <gradient
+        android:type="radial"
+        android:startColor="#FFFFFFFF"
+        android:centerColor="#F0F0F0"
+        android:endColor="#DDDDDD"
+        android:gradientRadius="6dp"
+        android:useLevel="false" /> <!-- 确保所有标签正确闭合 -->
+</shape>

@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/black">
+
+    <!-- 播放器渲染层 -->
+    <RelativeLayout
+        android:id="@+id/surface_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center" />
+
+    <!-- 封面图容器 - GSYVideoPlayer 需要 RelativeLayout -->
+    <RelativeLayout
+        android:id="@+id/thumb"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible">
+
+        <ImageView
+            android:id="@+id/thumbImage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop" />
+    </RelativeLayout>
+
+    <!-- 加载中 -->
+    <include
+        android:id="@+id/loading"
+        layout="@layout/layout_orange_loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone" />
+
+    <!-- 手势提示容器 - 亮度/音量/进度 -->
+    <LinearLayout
+        android:id="@+id/touch_change_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:background="@drawable/top_layout_round"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="10dp"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/touch_change_image"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:scaleType="centerInside" />
+
+        <ProgressBar
+            android:id="@+id/touch_change_progress"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="80dp"
+            android:layout_height="5dp"
+            android:layout_marginStart="8dp"
+            android:max="100"
+            android:progressDrawable="@drawable/seekbar_style" />
+
+        <TextView
+            android:id="@+id/touch_change_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:textColor="@android:color/white"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+    <!-- 底部控制栏 -->
+    <LinearLayout
+        android:id="@+id/layout_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/orange_shape_controller_bottom_bg"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp">
+
+        <!-- 当前时间 -->
+        <TextView
+            android:id="@+id/current"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="00:00"
+            android:textColor="#ffffff"
+            android:textSize="12sp" />
+
+        <!-- 进度条 -->
+        <SeekBar
+            android:id="@+id/progress"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_weight="1"
+            android:maxHeight="4dp"
+            android:minHeight="4dp"
+            android:progressDrawable="@drawable/seekbar_progress"
+            android:thumb="@drawable/dkplayer_seekbar_thumb" />
+
+        <!-- 总时长 -->
+        <TextView
+            android:id="@+id/total"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="00:00"
+            android:textColor="#ffffff"
+            android:textSize="12sp" />
+
+        <!-- 全屏按钮 -->
+        <ImageView
+            android:id="@+id/fullscreen"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginStart="8dp"
+            android:padding="6dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/dkplayer_selector_full_screen_button" />
+    </LinearLayout>
+
+    <!-- 顶部控制栏 -->
+    <include
+        android:id="@+id/layout_top"
+        layout="@layout/layout_orange_video_top"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true" />
+
+    <!-- 中间播放按钮 -->
+    <ImageView
+        android:id="@+id/start"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_centerInParent="true"
+        android:background="@drawable/dkplayer_shape_play_bg"
+        android:padding="16dp"
+        android:scaleType="centerInside"
+        android:src="@drawable/dkplayer_ic_action_play_arrow" />
+
+    <!-- 锁屏按钮 -->
+    <ImageView
+        android:id="@+id/lock_screen"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="16dp"
+        android:padding="8dp"
+        android:scaleType="centerInside"
+        android:src="@drawable/dkplayer_selector_lock_button"
+        android:visibility="gone" />
+
+    <!-- 横竖屏切换按钮 -->
+    <ImageView
+        android:id="@+id/rotation_button"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="72dp"
+        android:padding="8dp"
+        android:scaleType="centerInside"
+        android:src="@drawable/ic_rotation"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:visibility="gone" />
+
+    <!-- 返回按钮 -->
+    <ImageView
+        android:id="@+id/back"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:padding="8dp"
+        android:scaleType="centerInside"
+        android:src="@drawable/orange_ic_action_arrow_back"
+        android:visibility="gone" />
+
+</RelativeLayout>

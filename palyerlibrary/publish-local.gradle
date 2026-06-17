@@ -1,0 +1,80 @@
+// 本地 Maven 发布配置 - 用于测试和 JitPack
+apply plugin: 'maven-publish'
+
+// 版本信息
+ext {
+    PUBLISH_GROUP_ID = 'com.orange.player'
+    PUBLISH_ARTIFACT_ID = 'orangeplayer-legacy'
+    PUBLISH_VERSION = '1.0.0-api14'
+}
+
+// 生成源码 JAR
+task androidSourcesJar(type: Jar) {
+    archiveClassifier.set('sources')
+    from android.sourceSets.main.java.srcDirs
+}
+
+// 生成 Javadoc JAR
+task androidJavadocJar(type: Jar) {
+    archiveClassifier.set('javadoc')
+    from android.sourceSets.main.java.srcDirs
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                groupId PUBLISH_GROUP_ID
+                artifactId PUBLISH_ARTIFACT_ID
+                version PUBLISH_VERSION
+                
+                // 发布 AAR 文件
+                artifact bundleReleaseAar
+                
+                // 添加源码和文档
+                artifact androidSourcesJar
+                artifact androidJavadocJar
+                
+                pom {
+                    name = 'Orange Player Legacy'
+                    description = 'Android video player library with support for Android 4.0+ (API 14+)'
+                    url = 'https://github.com/yourusername/orangeplayer'
+                    
+                    licenses {
+                        license {
+                            name = 'The Apache License, Version 2.0'
+                            url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        }
+                    }
+                    
+                    // 简化的依赖配置
+                    withXml {
+                        def dependenciesNode = asNode().appendNode('dependencies')
+                        
+                        // 只添加必需的依赖
+                        configurations.implementation.allDependencies.each {
+                            if (it.group != null && it.name != null && it.version != null) {
+                                def dependencyNode = dependenciesNode.appendNode('dependency')
+                                dependencyNode.appendNode('groupId', it.group)
+                                dependencyNode.appendNode('artifactId', it.name)
+                                dependencyNode.appendNode('version', it.version)
+                                dependencyNode.appendNode('scope', 'runtime')
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        repositories {
+            // 本地 Maven 仓库
+            maven {
+                name = "local"
+                url = uri("${rootProject.buildDir}/local-maven")
+            }
+            
+            // 用户主目录的 .m2 仓库
+            mavenLocal()
+        }
+    }
+}

@@ -1,0 +1,173 @@
+plugins {
+    id 'com.android.library'
+}
+
+import org.gradle.api.artifacts.ProjectDependency
+
+android {
+    namespace 'com.orange.playerlibrary'
+    compileSdk 36
+
+    defaultConfig {
+        minSdk 14  // Android 4.0 ICS - 兼容 app-legacy 模块
+        targetSdk 36
+
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    
+    lint {
+        abortOnError false
+        checkReleaseBuilds false
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+}
+
+dependencies {
+    // AndroidX 基础库 - 使用兼容 API 14 的版本
+    api 'androidx.appcompat:appcompat:1.3.1'  // 改为 api，让使用者也能访问
+    api 'androidx.recyclerview:recyclerview:1.2.1'  // RecyclerView（API 14+）
+    
+    // Glide 图片加载库（用于缩略图加载）- 兼容 API 14
+    implementation 'com.github.bumptech.glide:glide:4.12.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
+    
+    // GSYVideoPlayer 核心依赖 - 使用本地源码模块（支持 API 14）
+    api project(':gsyVideoPlayer-base')
+    api project(':gsyVideoPlayer-proxy_cache')
+    api project(':gsyVideoPlayer-java')
+    
+    // Native so 文件模块 - compileOnly（让用户按需选择架构 ex_so为全架构）
+    compileOnly project(':gsyVideoPlayer-armv7a')
+    compileOnly project(':gsyVideoPlayer-armv64')
+    compileOnly project(':gsyVideoPlayer-x86')
+    compileOnly project(':gsyVideoPlayer-x86_64')
+    compileOnly project(':gsyVideoPlayer-ex_so')  // IJK with encryption support
+    
+    // ExoPlayer 支持 - compileOnly（需要 API 21+，用户按需添加）
+    compileOnly project(':gsyVideoPlayer-exo_player2')
+    
+    // 弹幕库 - compileOnly（用户按需添加）
+    compileOnly 'com.github.bilibili:DanmakuFlameMaster:0.9.25'
+    
+    // DLNA 投屏 - compileOnly（需要 API 19+，用户按需添加）
+    compileOnly 'com.github.uaoan:UaoanDLNA:1.0.1'
+    
+    // OCR 翻译字幕功能 - compileOnly（需要 API 21+，用户按需添加）
+    compileOnly 'cz.adaptech.tesseract4android:tesseract4android:4.7.0'
+    compileOnly 'com.google.mlkit:translate:17.0.2'
+    
+    // Vosk 离线语音识别 - compileOnly（需要 API 21+，用户按需添加）
+    compileOnly 'com.alphacephei:vosk-android:0.3.47'
+
+    // libtorrent4j 种子播放 - compileOnly（可选）
+    // 使用 libtorrent4j（jlibtorrent 的 fork，API 更完善）
+    def libtorrent_version = '2.0.6-26'
+    compileOnly "org.libtorrent4j:libtorrent4j:${libtorrent_version}"
+    compileOnly "org.libtorrent4j:libtorrent4j-android-arm:${libtorrent_version}"
+    compileOnly "org.libtorrent4j:libtorrent4j-android-arm64:${libtorrent_version}"
+    compileOnly "org.libtorrent4j:libtorrent4j-android-x86:${libtorrent_version}"
+    compileOnly "org.libtorrent4j:libtorrent4j-android-x86_64:${libtorrent_version}"
+    
+    // VideoDownloader 依赖 - 已迁移到 orange-downloader 模块
+    api project(':orange-downloader')
+    
+    // FFmpeg 工具 - 用于加密 TS 的 PTS 提取
+    api project(':orange-ffmpeg')
+    
+    // Unit testing dependencies
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.mockito:mockito-core:4.0.0'
+}
+
+
+// 应用 Maven Central 发布配置
+apply from: "${rootProject.projectDir}/maven-publish.gradle"
+
+afterEvaluate {
+    publishing {
+        publications {
+            maven(MavenPublication) {
+                groupId = pomGroupId
+                artifactId = 'orangeplayer'
+                version = pomVersion
+                
+                // 发布 AAR 文件
+                artifact bundleReleaseAar
+                
+                // 添加源码和文档
+                artifact androidSourcesJar
+                artifact androidJavadocJar
+                
+                pom {
+                    // 设置正确的 packaging
+                    packaging = 'aar'
+                    configurePom(pom)
+                    
+                    // 手动添加依赖信息
+                    withXml {
+                        def dependenciesNode = asNode().appendNode('dependencies')
+                        
+                        // 添加 api 依赖（compile scope）
+                        configurations.api.allDependencies.each {
+                            if (it instanceof ProjectDependency) {
+                                // 项目依赖使用我们的 groupId 和 version
+                                def dependencyNode = dependenciesNode.appendNode('dependency')
+                                dependencyNode.appendNode('groupId', pomGroupId)
+                                dependencyNode.appendNode('artifactId', it.name)
+                                dependencyNode.appendNode('version', pomVersion)
+                                dependencyNode.appendNode('scope', 'compile')
+                            } else if (it.group != null && it.name != null && it.version != null) {
+                                def dependencyNode = dependenciesNode.appendNode('dependency')
+                                dependencyNode.appendNode('groupId', it.group)
+                                dependencyNode.appendNode('artifactId', it.name)
+                                dependencyNode.appendNode('version', it.version)
+                                dependencyNode.appendNode('scope', 'compile')
+                            }
+                        }
+                        
+                        // 添加 implementation 依赖（runtime scope）
+                        configurations.implementation.allDependencies.each {
+                            if (it instanceof ProjectDependency) {
+                                // 项目依赖使用我们的 groupId 和 version
+                                def dependencyNode = dependenciesNode.appendNode('dependency')
+                                dependencyNode.appendNode('groupId', pomGroupId)
+                                dependencyNode.appendNode('artifactId', it.name)
+                                dependencyNode.appendNode('version', pomVersion)
+                                dependencyNode.appendNode('scope', 'runtime')
+                            } else if (it.group != null && it.name != null && it.version != null) {
+                                def dependencyNode = dependenciesNode.appendNode('dependency')
+                                dependencyNode.appendNode('groupId', it.group)
+                                dependencyNode.appendNode('artifactId', it.name)
+                                dependencyNode.appendNode('version', it.version)
+                                dependencyNode.appendNode('scope', 'runtime')
+                            }
+                        }
+                        
+                        // 注意：compileOnly 依赖不会被添加到 POM 中
+                        // 这是有意为之，让用户可以按需添加可选依赖
+                    }
+                }
+            }
+        }
+    }
+}
+
+task androidSourcesJar(type: Jar) {
+    archiveClassifier.set('sources')
+    from android.sourceSets.main.java.srcDirs
+}
+
+task androidJavadocJar(type: Jar) {
+    archiveClassifier.set('javadoc')
+    from android.sourceSets.main.java.srcDirs
+}

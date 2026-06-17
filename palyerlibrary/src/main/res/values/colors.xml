@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<color name="black">#FF000000</color>
+	<color name="white">#FFFFFFFF</color>
+	<color name="light_blue_400">#FF29B6F6</color>
+	<color name="light_blue_600">#FF039BE5</color>
+	<color name="gray_400">#FFBDBDBD</color>
+	<color name="gray_600">#FF757575</color>
+	
+	<!-- Orange Player Colors -->
+	<color name="orange_background_color">#4D000000</color>
+	<color name="orange_theme_color">#39C5BB</color>
+	<color name="orange_theme_color_translucent">#9939C5BB</color>
+	
+	<!-- DKPlayer compatibility colors -->
+	<color name="dkplayer_background_color">#4D000000</color>
+	<color name="dkplayer_theme_color">#39C5BB</color>
+	<color name="dkplayer_theme_color_translucent">#9939C5BB</color>
+	
+	<!-- VodControlView colors -->
+	<color name="orange_preview_background">#1a1a1a</color>
+	<color name="orange_preview_time_background">#80000000</color>
+	<color name="orange_danmu_hint_color">#CCCCCC</color>
+</resources>

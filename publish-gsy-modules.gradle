@@ -1,0 +1,176 @@
+// 统一发布 GSYVideoPlayer 模块的配置
+// 应用到各个 GSYVideoPlayer 模块
+
+apply plugin: 'maven-publish'
+apply plugin: 'signing'
+
+import org.gradle.api.artifacts.ProjectDependency
+
+// 从根项目获取发布信息（使用安全的方式）
+ext {
+    PUBLISH_GROUP_ID = rootProject.hasProperty('pomGroupId') ? rootProject.ext.pomGroupId : 'io.github.706412584'
+    PUBLISH_VERSION = rootProject.hasProperty('pomVersion') ? rootProject.ext.pomVersion : '1.1.1'  // 默认版本号改为 1.1.1
+    
+    // 根据模块名称设置 artifactId
+    PUBLISH_ARTIFACT_ID = project.name
+    
+    // Maven Central 凭证
+    ossrhUsername = rootProject.hasProperty('ossrhUsername') ? rootProject.ext.ossrhUsername : ''
+    ossrhPassword = rootProject.hasProperty('ossrhPassword') ? rootProject.ext.ossrhPassword : ''
+    signingKeyId = rootProject.findProperty('signing.keyId') ?: ''
+    signingPassword = rootProject.findProperty('signing.password') ?: ''
+    signingSecretKeyRingFile = rootProject.findProperty('signing.secretKeyRingFile') ?: ''
+    
+    // POM 信息
+    pomUrl = rootProject.hasProperty('pomUrl') ? rootProject.ext.pomUrl : 'https://github.com/706412584/orangeplayer'
+    pomLicenseName = rootProject.hasProperty('pomLicenseName') ? rootProject.ext.pomLicenseName : 'The Apache Software License, Version 2.0'
+    pomLicenseUrl = rootProject.hasProperty('pomLicenseUrl') ? rootProject.ext.pomLicenseUrl : 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+    pomLicenseDist = rootProject.hasProperty('pomLicenseDist') ? rootProject.ext.pomLicenseDist : 'repo'
+    pomDeveloperId = rootProject.hasProperty('pomDeveloperId') ? rootProject.ext.pomDeveloperId : '706412584'
+    pomDeveloperName = rootProject.hasProperty('pomDeveloperName') ? rootProject.ext.pomDeveloperName : 'xcwl'
+    pomDeveloperEmail = rootProject.hasProperty('pomDeveloperEmail') ? rootProject.ext.pomDeveloperEmail : '706412584@qq.com'
+    pomScmUrl = rootProject.hasProperty('pomScmUrl') ? rootProject.ext.pomScmUrl : 'https://github.com/706412584/orangeplayer.git'
+    pomScmConnection = rootProject.hasProperty('pomScmConnection') ? rootProject.ext.pomScmConnection : 'scm:git:git://github.com/706412584/orangeplayer.git'
+    pomScmDevConnection = rootProject.hasProperty('pomScmDevConnection') ? rootProject.ext.pomScmDevConnection : 'scm:git:ssh://github.com/706412584/orangeplayer.git'
+}
+
+// 生成源码 JAR
+task androidSourcesJar(type: Jar) {
+    archiveClassifier.set('sources')
+    if (android.sourceSets.main.java.srcDirs) {
+        from android.sourceSets.main.java.srcDirs
+    }
+}
+
+// 生成 Javadoc JAR（简化版，避免 Javadoc 错误）
+task androidJavadocJar(type: Jar) {
+    archiveClassifier.set('javadoc')
+    if (android.sourceSets.main.java.srcDirs) {
+        from android.sourceSets.main.java.srcDirs
+    }
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                groupId PUBLISH_GROUP_ID
+                artifactId PUBLISH_ARTIFACT_ID
+                version PUBLISH_VERSION
+                
+                // 发布 AAR 文件
+                if (tasks.findByName('bundleReleaseAar')) {
+                    artifact bundleReleaseAar
+                }
+                
+                // 添加源码和文档
+                artifact androidSourcesJar
+                artifact androidJavadocJar
+                
+                pom {
+                    name = project.name
+                    description = "GSYVideoPlayer module: ${project.name} - Supports Android 4.0+ (API 14+)"
+                    url = pomUrl
+                    
+                    licenses {
+                        license {
+                            name = pomLicenseName
+                            url = pomLicenseUrl
+                            distribution = pomLicenseDist
+                        }
+                    }
+                    
+                    developers {
+                        developer {
+                            id = pomDeveloperId
+                            name = pomDeveloperName
+                            email = pomDeveloperEmail
+                        }
+                    }
+                    
+                    scm {
+                        url = pomScmUrl
+                        connection = pomScmConnection
+                        developerConnection = pomScmDevConnection
+                    }
+                    
+                    // 添加依赖信息（仅当有依赖时）
+                    withXml {
+                        def dependenciesNode = asNode().appendNode('dependencies')
+                        
+                        // 添加 api 依赖
+                        if (configurations.findByName('api')) {
+                            configurations.api.allDependencies.each {
+                                if (it.group != null && it.name != null && it.version != null && !(it instanceof ProjectDependency)) {
+                                    def dependencyNode = dependenciesNode.appendNode('dependency')
+                                    dependencyNode.appendNode('groupId', it.group)
+                                    dependencyNode.appendNode('artifactId', it.name)
+                                    dependencyNode.appendNode('version', it.version)
+                                    dependencyNode.appendNode('scope', 'compile')
+                                } else if (it instanceof ProjectDependency) {
+                                    // 项目依赖使用我们的 groupId
+                                    def dependencyNode = dependenciesNode.appendNode('dependency')
+                                    dependencyNode.appendNode('groupId', PUBLISH_GROUP_ID)
+                                    dependencyNode.appendNode('artifactId', it.name)
+                                    dependencyNode.appendNode('version', PUBLISH_VERSION)
+                                    dependencyNode.appendNode('scope', 'compile')
+                                }
+                            }
+                        }
+                        
+                        // 添加 implementation 依赖
+                        if (configurations.findByName('implementation')) {
+                            configurations.implementation.allDependencies.each {
+                                if (it.group != null && it.name != null && it.version != null && !(it instanceof ProjectDependency)) {
+                                    def dependencyNode = dependenciesNode.appendNode('dependency')
+                                    dependencyNode.appendNode('groupId', it.group)
+                                    dependencyNode.appendNode('artifactId', it.name)
+                                    dependencyNode.appendNode('version', it.version)
+                                    dependencyNode.appendNode('scope', 'runtime')
+                                } else if (it instanceof ProjectDependency) {
+                                    // 项目依赖使用我们的 groupId
+                                    def dependencyNode = dependenciesNode.appendNode('dependency')
+                                    dependencyNode.appendNode('groupId', PUBLISH_GROUP_ID)
+                                    dependencyNode.appendNode('artifactId', it.name)
+                                    dependencyNode.appendNode('version', PUBLISH_VERSION)
+                                    dependencyNode.appendNode('scope', 'runtime')
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        repositories {
+            // 本地 Maven 仓库
+            maven {
+                name = 'local'
+                url = layout.buildDirectory.dir('repo')
+            }
+            
+            // Maven Central
+            maven {
+                name = 'sonatype'
+                def releasesRepoUrl = 'https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/'
+                def snapshotsRepoUrl = 'https://s01.oss.sonatype.org/content/repositories/snapshots/'
+                url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+                credentials {
+                    username = ossrhUsername
+                    password = ossrhPassword
+                }
+            }
+        }
+    }
+    
+    // 签名配置
+    signing {
+        def isJitPack = System.getenv('JITPACK') == 'true'
+        if (!isJitPack && signingKeyId && signingPassword && signingSecretKeyRingFile) {
+            required = true
+            sign publishing.publications
+        } else {
+            required = false
+        }
+    }
+}

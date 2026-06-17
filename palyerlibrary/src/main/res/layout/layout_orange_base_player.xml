@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 橘子播放器基础布局 - 包含 GSYBaseVideoPlayer 必需的控件 -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/black">
+
+    <!-- 视频渲染层 - 必需 -->
+    <RelativeLayout
+        android:id="@+id/surface_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center" />
+
+    <!-- 封面图容器 - GSYBaseVideoPlayer 需要 RelativeLayout -->
+    <RelativeLayout
+        android:id="@+id/thumb"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+        
+        <ImageView
+            android:id="@+id/thumb_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop" />
+    </RelativeLayout>
+
+    <!-- 返回按钮 - GSYBaseVideoPlayer 需要 -->
+    <ImageView
+        android:id="@+id/back"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:padding="12dp"
+        android:src="@drawable/orange_ic_action_arrow_back"
+        android:visibility="gone" />
+
+    <!-- 加载进度容器 - 使用 AVLoadingIndicatorView -->
+    <LinearLayout
+        android:id="@+id/loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+        
+        <com.orange.playerlibrary.loading.AVLoadingIndicatorView
+            android:id="@+id/loading_indicator"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            app:indicatorName="BallSpinFadeLoaderIndicator"
+            app:indicatorColor="#ffffff" />
+        
+        <TextView
+            android:id="@+id/tv_loading_speed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text=""
+            android:textColor="#ffffff"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+    <!-- 开始按钮 - GSYBaseVideoPlayer 需要 -->
+    <ImageView
+        android:id="@+id/start"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_centerInParent="true"
+        android:background="@drawable/orange_shape_play_bg"
+        android:padding="12dp"
+        android:src="@drawable/orange_selector_play_button"
+        android:visibility="gone" />
+
+    <!-- 锁屏按钮 - GSYBaseVideoPlayer 需要 -->
+    <ImageView
+        android:id="@+id/lock_screen"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="20dp"
+        android:visibility="gone" />
+
+    <!-- 底部进度条 - GSYBaseVideoPlayer 需要 -->
+    <ProgressBar
+        android:id="@+id/bottom_progressbar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_alignParentBottom="true"
+        android:max="100"
+        android:visibility="gone" />
+
+</RelativeLayout>

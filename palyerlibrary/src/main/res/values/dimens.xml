@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 控制器尺寸 -->
+    <dimen name="orange_controller_height">46dp</dimen>
+    <dimen name="orange_controller_height_fullscreen">88dp</dimen>
+    <dimen name="orange_controller_icon_padding">12dp</dimen>
+    <dimen name="orange_controller_text_size">16sp</dimen>
+    <dimen name="orange_controller_time_text_size">14sp</dimen>
+    
+    <!-- 播放按钮尺寸 -->
+    <dimen name="orange_play_btn_size">50dp</dimen>
+    
+    <!-- 默认间距 -->
+    <dimen name="orange_default_spacing">10dp</dimen>
+    
+    <!-- SeekBar 尺寸 -->
+    <dimen name="orange_seekbar_max_size">1dp</dimen>
+    <dimen name="orange_seekbar_size_n">12dp</dimen>
+    <dimen name="orange_seekbar_size_s">12dp</dimen>
+    <dimen name="orange_seekbar_height">5dp</dimen>
+    <dimen name="orange_seekbar_height_fullscreen">6dp</dimen>
+    <dimen name="orange_seekbar_margin">10dp</dimen>
+    
+    <!-- VodControlView 预览容器尺寸 -->
+    <dimen name="orange_preview_margin_bottom">85dp</dimen>
+    <dimen name="orange_preview_padding">4dp</dimen>
+    <dimen name="orange_preview_width">150dp</dimen>
+    <dimen name="orange_preview_height">100dp</dimen>
+    <dimen name="orange_preview_time_padding_horizontal">8dp</dimen>
+    <dimen name="orange_preview_time_padding_vertical">4dp</dimen>
+    <dimen name="orange_preview_time_text_size">12sp</dimen>
+    <dimen name="orange_preview_error_padding">8dp</dimen>
+    <dimen name="orange_preview_error_text_size">11sp</dimen>
+    <dimen name="orange_preview_arrow_width">24dp</dimen>
+    <dimen name="orange_preview_arrow_height">16dp</dimen>
+    <dimen name="orange_preview_arrow_margin_top">-4dp</dimen>
+    
+    <!-- VodControlView 控制区尺寸 -->
+    <dimen name="orange_bottom_container_padding">10dp</dimen>
+    <dimen name="orange_time_text_width">48dp</dimen>
+    <dimen name="orange_time_text_size">12sp</dimen>
+    <dimen name="orange_danmu_container_height">40dp</dimen>
+    <dimen name="orange_danmu_button_size">38dp</dimen>
+    <dimen name="orange_danmu_button_padding">8dp</dimen>
+    <dimen name="orange_danmu_input_height">25dp</dimen>
+    <dimen name="orange_danmu_input_margin">8dp</dimen>
+    <dimen name="orange_danmu_input_max_width">200dp</dimen>
+    <dimen name="orange_danmu_input_padding_start">12dp</dimen>
+    <dimen name="orange_danmu_input_text_size">11sp</dimen>
+    <dimen name="orange_control_button_padding">6dp</dimen>
+    <dimen name="orange_control_button_text_size">14sp</dimen>
+    <dimen name="orange_bottom_progress_height">2dp</dimen>
+    
+    <!-- DanmaView 弹幕尺寸 -->
+    <dimen name="orange_danmaku_text_size">14sp</dimen>
+    <dimen name="orange_danmaku_margin">12dp</dimen>
+</resources>

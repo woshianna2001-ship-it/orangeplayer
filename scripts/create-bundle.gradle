@@ -1,0 +1,147 @@
+// 创建 Maven Central Bundle 的任务
+
+task createMavenCentralBundle {
+    group = 'publishing'
+    description = '创建 Maven Central 上传 Bundle'
+    
+    dependsOn 'assembleRelease', 'androidSourcesJar', 'androidJavadocsJar'
+    
+    doLast {
+        def version = PUBLISH_VERSION
+        def artifactId = PUBLISH_ARTIFACT_ID
+        def groupId = PUBLISH_GROUP_ID
+        
+        // 创建输出目录
+        def bundleDir = file("${buildDir}/maven-central-bundle")
+        bundleDir.mkdirs()
+        
+        // 复制 AAR
+        def aarFile = file("${buildDir}/outputs/aar/${project.name}-release.aar")
+        def targetAar = file("${bundleDir}/${artifactId}-${version}.aar")
+        copy {
+            from aarFile
+            into bundleDir
+            rename { "${artifactId}-${version}.aar" }
+        }
+        
+        // 复制源码 JAR
+        def sourcesJar = file("${buildDir}/libs/${project.name}-sources.jar")
+        if (sourcesJar.exists()) {
+            copy {
+                from sourcesJar
+                into bundleDir
+                rename { "${artifactId}-${version}-sources.jar" }
+            }
+        }
+        
+        // 复制文档 JAR
+        def javadocJar = file("${buildDir}/libs/${project.name}-javadoc.jar")
+        if (javadocJar.exists()) {
+            copy {
+                from javadocJar
+                into bundleDir
+                rename { "${artifactId}-${version}-javadoc.jar" }
+            }
+        }
+        
+        // 创建 POM 文件
+        def pomFile = file("${bundleDir}/${artifactId}-${version}.pom")
+        pomFile.text = """<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    
+    <groupId>${groupId}</groupId>
+    <artifactId>${artifactId}</artifactId>
+    <version>${version}</version>
+    <packaging>aar</packaging>
+    
+    <name>OrangePlayer</name>
+    <description>Enhanced Android video player library based on GSYVideoPlayer, supports multiple player engines, subtitles, danmaku, OCR recognition, speech recognition and more</description>
+    <url>https://github.com/706412584/orangeplayer</url>
+    
+    <licenses>
+        <license>
+            <name>The Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+    
+    <developers>
+        <developer>
+            <id>706412584</id>
+            <name>xcwl</name>
+            <email>706412584@qq.com</email>
+        </developer>
+    </developers>
+    
+    <scm>
+        <connection>scm:git:git://github.com/706412584/orangeplayer.git</connection>
+        <developerConnection>scm:git:ssh://github.com/706412584/orangeplayer.git</developerConnection>
+        <url>https://github.com/706412584/orangeplayer</url>
+    </scm>
+    
+    <dependencies>
+        <dependency>
+            <groupId>androidx.appcompat</groupId>
+            <artifactId>appcompat</artifactId>
+            <version>1.7.1</version>
+        </dependency>
+        <dependency>
+            <groupId>io.github.carguo</groupId>
+            <artifactId>gsyvideoplayer</artifactId>
+            <version>11.3.0</version>
+        </dependency>
+        <dependency>
+            <groupId>io.github.carguo</groupId>
+            <artifactId>gsyvideoplayer-exo2</artifactId>
+            <version>11.3.0</version>
+        </dependency>
+    </dependencies>
+</project>
+"""
+        
+        // 签名所有文件
+        def signingKeyId = project.findProperty("signing.keyId")
+        def signingPassword = project.findProperty("signing.password")
+        
+        if (signingKeyId && signingPassword) {
+            println "正在签名文件..."
+            
+            bundleDir.listFiles().each { file ->
+                if (!file.name.endsWith('.asc')) {
+                    exec {
+                        workingDir bundleDir
+                        commandLine 'gpg', '-ab', file.name
+                    }
+                }
+            }
+        } else {
+            println "警告: 未配置 GPG 签名，跳过签名步骤"
+        }
+        
+        // 创建 Bundle ZIP
+        def zipFile = file("${buildDir}/${artifactId}-${version}-bundle.zip")
+        ant.zip(destfile: zipFile) {
+            fileset(dir: bundleDir)
+        }
+        
+        println ""
+        println "=========================================="
+        println "Maven Central Bundle 已创建"
+        println "=========================================="
+        println "Bundle 位置: ${zipFile.absolutePath}"
+        println "文件列表:"
+        bundleDir.listFiles().each { file ->
+            println "  - ${file.name}"
+        }
+        println ""
+        println "下一步:"
+        println "1. 访问 https://central.sonatype.com/"
+        println "2. 点击 Publish > Upload"
+        println "3. 上传 ${zipFile.name}"
+        println "4. 等待验证和发布（10-30 分钟）"
+        println "=========================================="
+    }
+}
