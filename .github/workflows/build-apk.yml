@@ -42,8 +42,38 @@ jobs:
         EOF
         cat gradle.properties
 
-    - name: Create maven-publish.gradle stub
-      run: echo "// Stub for CI" > maven-publish.gradle
+    - name: Create maven-publish.gradle
+      run: |
+        cat > maven-publish.gradle << 'EOF'
+        ext {
+            pomGroupId = 'io.github.706412584'
+            pomVersion = '1.1.1'
+            configurePom = { pom ->
+                pom.name = 'OrangePlayer'
+                pom.description = 'Enhanced Android video player library'
+                pom.url = 'https://github.com/706412584/orangeplayer'
+                pom.licenses {
+                    license {
+                        name = 'The Apache License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                pom.developers {
+                    developer {
+                        id = '706412584'
+                        name = 'Orange Developer'
+                        email = '706412584@qq.com'
+                    }
+                }
+                pom.scm {
+                    connection = 'scm:git:git://github.com/706412584/orangeplayer.git'
+                    developerConnection = 'scm:git:ssh://github.com/706412584/orangeplayer.git'
+                    url = 'https://github.com/706412584/orangeplayer'
+                }
+            }
+        }
+        EOF
+        cat maven-publish.gradle
 
     - name: Generate keystore
       run: |
