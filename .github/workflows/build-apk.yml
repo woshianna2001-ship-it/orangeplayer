@@ -30,7 +30,13 @@ jobs:
     
     - name: Create local.properties
       run: echo "sdk.dir=$ANDROID_HOME" > local.properties
-    
+
+    - name: Create maven-publish.gradle if missing
+      run: |
+        if [ ! -f maven-publish.gradle ]; then
+          echo "// Maven publish config - stub for CI" > maven-publish.gradle
+        fi
+
     - name: Fix gradle.properties for CI
       run: |
         # Remove local Java path that doesn't exist in CI
@@ -40,7 +46,15 @@ jobs:
         sed -i '/ossrhUsername/d' gradle.properties
         sed -i '/ossrhPassword/d' gradle.properties
         cat gradle.properties
-    
+
+    - name: Clone GSYVideoPlayer submodule manually if needed
+      run: |
+        if [ ! -f GSYVideoPlayer-source/gsyVideoPlayer-java/build.gradle ]; then
+          rm -rf GSYVideoPlayer-source
+          git clone --depth 1 https://github.com/706412584/GSYVideoPlayer.git GSYVideoPlayer-source
+        fi
+        ls GSYVideoPlayer-source/
+
     - name: Generate debug keystore for release build
       run: |
         keytool -genkeypair -v -storetype JKS \
