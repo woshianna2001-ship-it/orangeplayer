@@ -32,47 +32,43 @@ jobs:
 
     - name: Create clean gradle.properties
       run: |
-        cat > gradle.properties << 'EOF'
-        android.useAndroidX=true
-        android.enableJetifier=true
-        org.gradle.jvmargs=-Xmx4096m -XX:MaxMetaspaceSize=512m
-        org.gradle.daemon=false
-        org.gradle.parallel=true
-        org.gradle.caching=true
-        EOF
+        echo "android.useAndroidX=true" > gradle.properties
+        echo "android.enableJetifier=true" >> gradle.properties
+        echo "org.gradle.jvmargs=-Xmx4096m -XX:MaxMetaspaceSize=512m" >> gradle.properties
+        echo "org.gradle.daemon=false" >> gradle.properties
+        echo "org.gradle.parallel=true" >> gradle.properties
+        echo "org.gradle.caching=true" >> gradle.properties
         cat gradle.properties
 
     - name: Create maven-publish.gradle
       run: |
-        cat > maven-publish.gradle << 'EOF'
-        ext {
-            pomGroupId = 'io.github.706412584'
-            pomVersion = '1.1.1'
-            configurePom = { pom ->
-                pom.name = 'OrangePlayer'
-                pom.description = 'Enhanced Android video player library'
-                pom.url = 'https://github.com/706412584/orangeplayer'
-                pom.licenses {
-                    license {
-                        name = 'The Apache License, Version 2.0'
-                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                    }
-                }
-                pom.developers {
-                    developer {
-                        id = '706412584'
-                        name = 'Orange Developer'
-                        email = '706412584@qq.com'
-                    }
-                }
-                pom.scm {
-                    connection = 'scm:git:git://github.com/706412584/orangeplayer.git'
-                    developerConnection = 'scm:git:ssh://github.com/706412584/orangeplayer.git'
-                    url = 'https://github.com/706412584/orangeplayer'
-                }
-            }
-        }
-        EOF
+        echo "ext {" > maven-publish.gradle
+        echo "    pomGroupId = 'io.github.706412584'" >> maven-publish.gradle
+        echo "    pomVersion = '1.1.1'" >> maven-publish.gradle
+        echo "    configurePom = { pom ->" >> maven-publish.gradle
+        echo "        pom.name = 'OrangePlayer'" >> maven-publish.gradle
+        echo "        pom.description = 'Enhanced Android video player library'" >> maven-publish.gradle
+        echo "        pom.url = 'https://github.com/706412584/orangeplayer'" >> maven-publish.gradle
+        echo "        pom.licenses {" >> maven-publish.gradle
+        echo "            license {" >> maven-publish.gradle
+        echo "                name = 'The Apache License, Version 2.0'" >> maven-publish.gradle
+        echo "                url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'" >> maven-publish.gradle
+        echo "            }" >> maven-publish.gradle
+        echo "        }" >> maven-publish.gradle
+        echo "        pom.developers {" >> maven-publish.gradle
+        echo "            developer {" >> maven-publish.gradle
+        echo "                id = '706412584'" >> maven-publish.gradle
+        echo "                name = 'Orange Developer'" >> maven-publish.gradle
+        echo "                email = '706412584@qq.com'" >> maven-publish.gradle
+        echo "            }" >> maven-publish.gradle
+        echo "        }" >> maven-publish.gradle
+        echo "        pom.scm {" >> maven-publish.gradle
+        echo "            connection = 'scm:git:git://github.com/706412584/orangeplayer.git'" >> maven-publish.gradle
+        echo "            developerConnection = 'scm:git:ssh://github.com/706412584/orangeplayer.git'" >> maven-publish.gradle
+        echo "            url = 'https://github.com/706412584/orangeplayer'" >> maven-publish.gradle
+        echo "        }" >> maven-publish.gradle
+        echo "    }" >> maven-publish.gradle
+        echo "}" >> maven-publish.gradle
         cat maven-publish.gradle
 
     - name: Generate keystore
