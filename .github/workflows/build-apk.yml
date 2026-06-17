@@ -28,33 +28,51 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     
-    - name: Create local.properties
-      run: echo "sdk.dir=$ANDROID_HOME" > local.properties
-
-    - name: Create maven-publish.gradle if missing
+    - name: Setup CI configuration files
       run: |
+        # Create clean local.properties
+        echo "sdk.dir=$ANDROID_HOME" > local.properties
+
+        # Create clean gradle.properties (overwrite existing)
+        printf '%s\n' \
+          'android.useAndroidX=true' \
+          'android.enableJetifier=true' \
+          'org.gradle.jvmargs=-Xmx4096m -XX:MaxMetaspaceSize=768m' \
+          'org.gradle.daemon=false' \
+          'org.gradle.parallel=true' \
+          'org.gradle.caching=true' \
+          > gradle.properties
+
+        # Create maven-publish.gradle stub if missing
         if [ ! -f maven-publish.gradle ]; then
           echo "// Maven publish config - stub for CI" > maven-publish.gradle
         fi
 
-    - name: Fix gradle.properties for CI
-      run: |
-        # Remove local Java path that doesn't exist in CI
-        sed -i '/org.gradle.java.home/d' gradle.properties
-        # Remove GPG signing config not needed for APK build
-        sed -i '/signing\./d' gradle.properties
-        sed -i '/ossrhUsername/d' gradle.properties
-        sed -i '/ossrhPassword/d' gradle.properties
+        echo "=== gradle.properties ==="
         cat gradle.properties
-
-    - name: Clone GSYVideoPlayer submodule manually if needed
+    
+    - name: Clone GSYVideoPlayer submodule
       run: |
+        # Check if submodule is properly initialized
         if [ ! -f GSYVideoPlayer-source/gsyVideoPlayer-java/build.gradle ]; then
+          echo "Submodule not initialized, cloning manually..."
           rm -rf GSYVideoPlayer-source
           git clone --depth 1 https://github.com/706412584/GSYVideoPlayer.git GSYVideoPlayer-source
         fi
-        ls GSYVideoPlayer-source/
-
+        
+        # Verify submodule contents
+        echo "=== GSYVideoPlayer-source contents ==="
+        ls -la GSYVideoPlayer-source/
+        
+        # Verify required modules exist
+        for module in gsyVideoPlayer-base gsyVideoPlayer-java gsyVideoPlayer-ex_so; do
+          if [ ! -f "GSYVideoPlayer-source/$module/build.gradle" ]; then
+            echo "ERROR: Missing module $module"
+            exit 1
+          fi
+        done
+        echo "All required modules found!"
+    
     - name: Generate debug keystore for release build
       run: |
         keytool -genkeypair -v -storetype JKS \
@@ -65,7 +83,16 @@ jobs:
           -keystore app/smlieapp.jks
     
     - name: Build with Gradle
-      run: ./gradlew clean assembleRelease --no-daemon --stacktrace
+      run: |
+        echo "=== Starting build ==="
+        ./gradlew clean assembleRelease --no-daemon --stacktrace --info 2>&1 | tee build.log
+        BUILD_EXIT_CODE=${PIPESTATUS[0]}
+        echo "=== Build finished with exit code: $BUILD_EXIT_CODE ==="
+        if [ $BUILD_EXIT_CODE -ne 0 ]; then
+          echo "=== Last 100 lines of build log ==="
+          tail -100 build.log
+          exit $BUILD_EXIT_CODE
+        fi
     
     - name: Upload app APK
       uses: actions/upload-artifact@v4
@@ -91,12 +118,13 @@ jobs:
         path: app-tv/build/outputs/apk/release/*.apk
         retention-days: 30
     
-    - name: Upload build reports
+    - name: Upload build reports on failure
       uses: actions/upload-artifact@v4
       if: failure()
       with:
         name: build-reports
         path: |
+          build.log
           build/reports/
           */build/reports/
         retention-days: 7
