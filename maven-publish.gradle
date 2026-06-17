@@ -1,0 +1,2 @@
+// Maven publish configuration - only applied when publishing
+// This file is intentionally left minimal for CI builds
