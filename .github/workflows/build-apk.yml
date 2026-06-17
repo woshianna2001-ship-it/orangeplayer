@@ -15,7 +15,7 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
       with:
-        submodules: recursive
+        submodules: false
         fetch-depth: 0
     
     - name: Set up JDK 17
@@ -30,69 +30,84 @@ jobs:
     
     - name: Setup CI configuration files
       run: |
-        # Create clean local.properties
         echo "sdk.dir=$ANDROID_HOME" > local.properties
-
-        # Create clean gradle.properties (overwrite existing)
-        printf '%s\n' \
-          'android.useAndroidX=true' \
-          'android.enableJetifier=true' \
-          'org.gradle.jvmargs=-Xmx4096m -XX:MaxMetaspaceSize=768m' \
-          'org.gradle.daemon=false' \
-          'org.gradle.parallel=true' \
-          'org.gradle.caching=true' \
-          > gradle.properties
-
-        # Create maven-publish.gradle stub if missing
-        if [ ! -f maven-publish.gradle ]; then
-          echo "// Maven publish config - stub for CI" > maven-publish.gradle
-        fi
-
+        
+        # Create clean gradle.properties
+        echo "android.useAndroidX=true" > gradle.properties
+        echo "android.enableJetifier=true" >> gradle.properties
+        echo "org.gradle.jvmargs=-Xmx4096m -XX:MaxMetaspaceSize=768m" >> gradle.properties
+        echo "org.gradle.daemon=false" >> gradle.properties
+        echo "org.gradle.parallel=true" >> gradle.properties
+        echo "org.gradle.caching=true" >> gradle.properties
+        
+        # Create maven-publish.gradle stub
+        echo "// Maven publish config - stub for CI" > maven-publish.gradle
+        
         echo "=== gradle.properties ==="
         cat gradle.properties
+        echo "=== maven-publish.gradle ==="
+        cat maven-publish.gradle
     
     - name: Clone GSYVideoPlayer submodule
       run: |
-        # Check if submodule is properly initialized
-        if [ ! -f GSYVideoPlayer-source/gsyVideoPlayer-java/build.gradle ]; then
-          echo "Submodule not initialized, cloning manually..."
-          rm -rf GSYVideoPlayer-source
-          git clone --depth 1 https://github.com/706412584/GSYVideoPlayer.git GSYVideoPlayer-source
+        echo "=== Checking GSYVideoPlayer-source ==="
+        if [ -d "GSYVideoPlayer-source" ]; then
+          echo "Directory exists, checking contents..."
+          ls -la GSYVideoPlayer-source/ || true
+          if [ ! -f "GSYVideoPlayer-source/gsyVideoPlayer-java/build.gradle" ]; then
+            echo "Module not found, removing directory..."
+            rm -rf GSYVideoPlayer-source
+          fi
         fi
         
-        # Verify submodule contents
-        echo "=== GSYVideoPlayer-source contents ==="
+        if [ ! -d "GSYVideoPlayer-source" ]; then
+          echo "Cloning GSYVideoPlayer repository..."
+          git clone --depth 1 --branch master https://github.com/706412584/GSYVideoPlayer.git GSYVideoPlayer-source
+        fi
+        
+        echo "=== Verifying submodule contents ==="
         ls -la GSYVideoPlayer-source/
         
         # Verify required modules exist
-        for module in gsyVideoPlayer-base gsyVideoPlayer-java gsyVideoPlayer-ex_so; do
+        for module in gsyVideoPlayer-base gsyVideoPlayer-java gsyVideoPlayer-ex_so gsyVideoPlayer-exo_player2 gsyVideoPlayer-aliplay; do
           if [ ! -f "GSYVideoPlayer-source/$module/build.gradle" ]; then
             echo "ERROR: Missing module $module"
             exit 1
           fi
+          echo "✓ Found module: $module"
         done
         echo "All required modules found!"
     
     - name: Generate debug keystore for release build
       run: |
+        echo "Generating keystore..."
         keytool -genkeypair -v -storetype JKS \
           -keyalg RSA -keysize 2048 -validity 10000 \
           -storepass 123123 -keypass 123123 \
           -alias smlieapp \
           -dname "CN=OrangePlayer, OU=Dev, O=OrangePlayer, L=Beijing, ST=Beijing, C=CN" \
           -keystore app/smlieapp.jks
+        echo "Keystore generated successfully"
+        ls -la app/smlieapp.jks
     
     - name: Build with Gradle
       run: |
         echo "=== Starting build ==="
-        ./gradlew clean assembleRelease --no-daemon --stacktrace --info 2>&1 | tee build.log
+        echo "Current directory: $(pwd)"
+        echo "Java version: $(java -version)"
+        echo "Gradle version:"
+        ./gradlew --version
+        
+        ./gradlew clean assembleRelease --no-daemon --stacktrace 2>&1 | tee build.log
         BUILD_EXIT_CODE=${PIPESTATUS[0]}
+        
         echo "=== Build finished with exit code: $BUILD_EXIT_CODE ==="
         if [ $BUILD_EXIT_CODE -ne 0 ]; then
-          echo "=== Last 100 lines of build log ==="
-          tail -100 build.log
+          echo "=== Build failed! Last 200 lines of build log ==="
+          tail -200 build.log
           exit $BUILD_EXIT_CODE
         fi
+        echo "Build successful!"
     
     - name: Upload app APK
       uses: actions/upload-artifact@v4
